@@ -96,57 +96,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callb
         val watermark = findViewById<View>(R.id.watermark)
 
         val options: List<Option<*>> = listOf(
-            // Layout
-            Option.Width(1000), Option.Height(600),
-            // Engine and preview
-            Option.Mode(), Option.Engine(), Option.Preview(),
-            // Some controls
-            Option.Flash(), Option.WhiteBalance(), Option.Hdr(),
-            Option.PictureMetering(), Option.PictureSnapshotMetering(),
-            Option.PictureFormat(),
-            // Video recording
-            Option.PreviewFrameRate(), Option.VideoCodec(), Option.Audio(), Option.AudioCodec(),
-            // Gestures
-            Option.Pinch(), Option.HorizontalScroll(), Option.VerticalScroll(),
-            Option.Tap(), Option.LongTap(),
-            // Watermarks
-            Option.OverlayInPreview(watermark),
-            Option.OverlayInPictureSnapshot(watermark),
-            Option.OverlayInVideoSnapshot(watermark),
-            // Frame Processing
-            Option.FrameProcessingFormat(),
-            // Other
-            Option.Grid(), Option.GridColor(), Option.UseDeviceOrientation()
+            Option.Width(700), Option.Height(700),
+
         )
-        val dividers = listOf(
-            // Layout
-            false, true,
-            // Engine and preview
-            false, false, true,
-            // Some controls
-            false, false, false, false, false, true,
-            // Video recording
-            false, false, false, true,
-            // Gestures
-            false, false, false, false, true,
-            // Watermarks
-            false, false, true,
-            // Frame Processing
-            true,
-            // Other
-            false, false, true
-        )
+
         for (i in options.indices) {
             val view = OptionView<Any>(this)
             view.setOption(options[i] as Option<Any>, this)
-            view.setHasDivider(dividers[i])
             group.addView(view,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        }
-        controlPanel.viewTreeObserver.addOnGlobalLayoutListener {
-            BottomSheetBehavior.from(controlPanel).state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         // Animate the watermark just to show we record the animation in video snapshots
@@ -342,7 +302,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callb
                 return false
             }
         }
-
         option.set(camera, value)
         BottomSheetBehavior.from(controlPanel).state = BottomSheetBehavior.STATE_HIDDEN
         message("Changed " + option.name + " to " + name, false)
