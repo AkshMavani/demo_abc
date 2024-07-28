@@ -11,12 +11,10 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.IBinder
-import android.os.Parcel
-import android.os.Parcelable
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 
-class NetworkMonitorService() : Service() {
+class NetworkMonitorService : Service() {
 
     private lateinit var networkChangeReceiver: BroadcastReceiver
 
@@ -62,13 +60,10 @@ class NetworkMonitorService() : Service() {
         }
 
         val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Network Monitor Service")
-            .setContentText("Monitoring network connectivity...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("")
+            .setContentText("")
             .build()
 
         startForeground(1, notification)
     }
-
-
 }

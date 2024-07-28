@@ -25,11 +25,9 @@ class MainActivity3 : AppCompatActivity() {
 //        }
        binding.switch1.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                // Switch is ON
                 edit.putBoolean("VOLUMEUP",true).apply()
                 Log.e("TAG1234c5", "Switch is ON")
             } else {
-                // Switch is OFF
                 edit.putBoolean("VOLUMEUP",false).apply()
                 Log.e("TAG1234c5", "Switch is OFF")
             }
