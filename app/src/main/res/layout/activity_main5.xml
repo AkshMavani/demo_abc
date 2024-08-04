@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,17 +7,72 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity5">
 
-    <ImageView
-        android:id="@+id/imageView_full"
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView_full"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_height="match_parent"-->
+<!--       android:src="@drawable/baseline_slow_motion_video_24"/>-->
+<!--    <VideoView-->
+<!--        android:id="@+id/videoView_full"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_height="match_parent"-->
+<!--       android:src="@drawable/baseline_slow_motion_video_24"/>-->
+    <com.xiaopo.flying.sticker.StickerView
+        android:id="@+id/sticker_view"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"
-       android:src="@drawable/baseline_slow_motion_video_24"/>
-    <VideoView
-        android:id="@+id/videoView_full"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"
-       android:src="@drawable/baseline_slow_motion_video_24"/>
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:showBorder="true"
+        app:showIcons="true">
+        <!-- custom, maybe you will like to put an ImageView-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background" />
+    </com.xiaopo.flying.sticker.StickerView>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/btn_one"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+        <Button
+            android:id="@+id/btn_two"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+        <Button
+            android:id="@+id/btn_three"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+        <Button
+            android:id="@+id/btn_four"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+        <Button
+            android:id="@+id/btn_five"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

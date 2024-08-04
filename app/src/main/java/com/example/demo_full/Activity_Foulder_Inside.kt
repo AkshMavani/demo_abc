@@ -1,19 +1,24 @@
 package com.example.demo_full
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.camera.Click_image
 
 import com.example.demo_full.databinding.ActivityMain4Binding
+import java.io.Serializable
 
 
-class MainActivity4 : AppCompatActivity() {
+class MainActivity4 : AppCompatActivity(),Click_image {
 
     private lateinit var binding: ActivityMain4Binding
+    var arr:ArrayList<Model_Img> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMain4Binding.inflate(layoutInflater)
@@ -28,12 +33,13 @@ class MainActivity4 : AppCompatActivity() {
 
 
         val images = intent?.let { getMediaInFolder(this, it) }
-        val imageAdapter = images?.let { ImageAdapter(it, this) }
+
+        val imageAdapter = images?.let { ImageAdapter(images, this,this) }
         imageRecyclerView.adapter = imageAdapter
     }
 
-    fun getMediaInFolder(context: Context, folderName: String): List<String> {
-        val mediaList = mutableListOf<String>()
+    fun getMediaInFolder(context: Context, folderName: String): List<Model_Img> {
+        val mediaList = mutableListOf<Model_Img>()
 
         // Query images
         val imageProjection = arrayOf(MediaStore.Images.Media.DATA)
@@ -52,7 +58,7 @@ class MainActivity4 : AppCompatActivity() {
             val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             while (it.moveToNext()) {
                 val imagePath = it.getString(imagePathColumn)
-                mediaList.add(imagePath)
+                mediaList.add(Model_Img(imagePath))
             }
         }
         val videoProjection = arrayOf(MediaStore.Video.Media.DATA)
@@ -68,11 +74,22 @@ class MainActivity4 : AppCompatActivity() {
             val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
             while (it.moveToNext()) {
                 val videoPath = it.getString(videoPathColumn)
-                mediaList.add(videoPath)
+                mediaList.add(Model_Img(videoPath))
             }
         }
 
         return mediaList
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    override fun click(modelImg: Model_Img) {
+        arr.add(modelImg)
+        binding.btnClick.setOnClickListener {
+            val intent= Intent(this,MainActivity5::class.java)
+                intent.putExtra("flag",false)
+                intent.putExtra("img_url",arr as Serializable)
+               startActivity(intent)
+        }
     }
 
 

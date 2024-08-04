@@ -19,3 +19,4 @@ rootProject.name = "demo_full"
 include ':app'
 include ':cameraview'
 include ':photoeditor'
+include ':sticker1'

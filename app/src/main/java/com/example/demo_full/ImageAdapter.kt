@@ -11,9 +11,11 @@ import android.widget.ImageView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.camera.Click_image
 import java.io.File
+import java.io.Serializable
 
-class ImageAdapter(private val mList: List<String>, private val context: Context) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+class ImageAdapter(private val mList: List<Model_Img>, private val context: Context,var click:Click_image) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,30 +28,9 @@ class ImageAdapter(private val mList: List<String>, private val context: Context
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemPath = mList[position]
-        val uri = Uri.fromFile(File(itemPath))
+        val uri = Uri.fromFile(File(itemPath.str))
 
-        if (itemPath.endsWith(".mp4") || itemPath.endsWith(".3gp") || itemPath.endsWith(".mkv")) {
-            // It's a video, display VideoView
-            holder.imageView.visibility = View.VISIBLE
-            holder.videoView.visibility = View.GONE
-            Glide.with(context)
-                .load(uri)
-                .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(holder.imageView)
-//            holder.videoView.setVideoURI(uri)
-//            holder.videoView.setOnPreparedListener { mediaPlayer ->
-//                mediaPlayer.isLooping = true
-////                holder.videoView.start()
-//            }
-            holder.itemView.setOnClickListener {
-                val intent=Intent(context,MainActivity5::class.java)
-                intent.putExtra("flag",true)
-                intent.putExtra("img_url",uri.toString())
-                context.startActivity(intent)
-            }
-        } else {
-            // It's an image, display ImageView
+
             holder.videoView.visibility = View.GONE
             holder.imageView.visibility = View.VISIBLE
 
@@ -59,11 +40,12 @@ class ImageAdapter(private val mList: List<String>, private val context: Context
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView)
             holder.itemView.setOnClickListener {
-                val intent=Intent(context,MainActivity5::class.java)
-                intent.putExtra("flag",false)
-                intent.putExtra("img_url",uri.toString())
-                context.startActivity(intent)
-            }
+//                val intent=Intent(context,MainActivity5::class.java)
+//                intent.putExtra("flag",false)
+//                intent.putExtra("img_url",mList as Serializable)
+//                context.startActivity(intent)
+                    click.click(itemPath)
+
         }
 
     }

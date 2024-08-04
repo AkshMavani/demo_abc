@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cameraview" />
             <option value="$PROJECT_DIR$/photoeditor" />
+            <option value="$PROJECT_DIR$/sticker1" />
           </set>
         </option>
       </GradleProjectSettings>

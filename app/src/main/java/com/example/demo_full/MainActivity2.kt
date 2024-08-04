@@ -49,7 +49,6 @@ class MainActivity2 : AppCompatActivity() {
 
 
         CameraLogger.setLogLevel(CameraLogger.LEVEL_VERBOSE)
-        camera.addCameraListener(Listener())
         camera.setLifecycleOwner(this)
         controlPanel.setOnClickListener { val intent=Intent(this,MainActivity3::class.java)
         startActivity(intent)}
