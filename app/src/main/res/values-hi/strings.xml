@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">डेमो_पूर्ण</string>
+    <string name="language">भाषा</string>
+    <string name="tutorial_description">ट्यूटोरियल_विवरण</string>
+    <string name="description2">विवरण2</string>
+
+    <string name="title_onboarding_1">ऑनबोर्डिंग ऐप में आपका स्वागत है!</string>
+    <string name="description_onboarding_1">यह एक ओपन-सोर्स प्रोजेक्ट है जो मीठे और मूल ऑनबोर्डिंग व्यू पेजर को दिखाता है जो मटेरियल डिज़ाइन दिशानिर्देशों का पालन करता है</string>
+
+    <string name="title_onboarding_2">AirBnB Lottie आज़माएँ</string>
+    <string name="description_onboarding_2">हम अपने इंट्रो में लोटी एनिमेशन का उपयोग करते हैं ताकि इसे इंटरैक्टिव और सुखद बनाया जा सके। क्या आपने इसे पहले आज़माया है? यदि नहीं, तो अभी शुरू करें। यह अद्भुत है</string>
+
+    <string name="title_onboarding_3">सुंदर ऐप्स कोड करें</string>
+    <string name="description_onboarding_3">हमारा मिशन उपयोगी और सूक्ष्म ऐप्स बनाना है। हम लोगों को ओपन-सोर्स स्टफ्स के साथ समय बचाने में मदद करना पसंद करते हैं, लेकिन हम नई चीजें बनाकर जीवन को भी आसान बनाते हैं। शुभ कोडिंग!</string>
+
+    <string name="start_text_advice">इस एप्लिकेशन का उपयोग जारी रखकर, आप हमारी उपयोग की शर्तों और गोपनीयता नीति से सहमत हैं</string>
+
+    <string name="start">प्रारंभ</string>
+    <string name="skip">छोड़ें</string>
+    <string name="finish">समाप्त</string>
+    <string name="next">अगला</string>
+    <string name="back">पीछे</string>
+</resources>

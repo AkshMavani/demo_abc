@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.camera.Click_image
 
 import com.example.demo_full.databinding.ActivityMain4Binding
+import com.example.multifit.activity_Multifit
 import java.io.Serializable
 
 
@@ -85,7 +86,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
     override fun click(modelImg: Model_Img) {
         arr.add(modelImg)
         binding.btnClick.setOnClickListener {
-            val intent= Intent(this,MainActivity5::class.java)
+            val intent= Intent(this,activity_Multifit::class.java)
                 intent.putExtra("flag",false)
                 intent.putExtra("img_url",arr as Serializable)
                startActivity(intent)

@@ -32,7 +32,7 @@ import com.otaliastudios.cameraview.frame.FrameProcessor
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callback {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         private val LOG = CameraLogger.create("DemoApp")
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callb
         setContentView(R.layout.activity_main6)
         CameraLogger.setLogLevel(CameraLogger.LEVEL_VERBOSE)
         camera.setLifecycleOwner(this)
-
+      //  splitCameraView()
 
         camera.addCameraListener(Listener())
         if (USE_FRAME_PROCESSOR) {
@@ -95,19 +95,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callb
         val group = controlPanel.getChildAt(0) as ViewGroup
         val watermark = findViewById<View>(R.id.watermark)
 
-        val options: List<Option<*>> = listOf(
-            Option.Width(700), Option.Height(700),
 
-        )
 
-        for (i in options.indices) {
-            val view = OptionView<Any>(this)
-            view.setOption(options[i] as Option<Any>, this)
-            group.addView(view,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
+
 
         // Animate the watermark just to show we record the animation in video snapshots
         val animator = ValueAnimator.ofFloat(1f, 0.8f)
@@ -292,21 +282,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, OptionView.Callb
         // camera.setFilter(new MultiFilter(duotone, filter.newInstance()));
     }
 
-    override fun <T : Any> onValueChanged(option: Option<T>, value: T, name: String): Boolean {
-        if (option is Option.Width || option is Option.Height) {
-            val preview = camera.preview
-            val wrapContent = value as Int == ViewGroup.LayoutParams.WRAP_CONTENT
-            if (preview == Preview.SURFACE && !wrapContent) {
-                message("The SurfaceView preview does not support width or height changes. " +
-                        "The view will act as WRAP_CONTENT by default.", true)
-                return false
-            }
-        }
-        option.set(camera, value)
-        BottomSheetBehavior.from(controlPanel).state = BottomSheetBehavior.STATE_HIDDEN
-        message("Changed " + option.name + " to " + name, false)
-        return true
-    }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
