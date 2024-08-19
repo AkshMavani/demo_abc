@@ -2,6 +2,7 @@ package com.xiaopo.flying.sticker;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -18,7 +19,8 @@ import java.lang.annotation.RetentionPolicy;
  * @author wupanjie
  */
 public abstract class Sticker {
-
+  private Paint borderPaint;
+  private float borderWidth;
   @IntDef(flag = true, value = {
       Position.CENTER, Position.TOP, Position.BOTTOM, Position.LEFT, Position.RIGHT
   }) @Retention(RetentionPolicy.SOURCE) public @interface Position {
@@ -31,7 +33,7 @@ public abstract class Sticker {
 
   private final float[] matrixValues = new float[9];
   private final float[] unrotatedWrapperCorner = new float[8];
-  private final float[] unrotatedPoint = new float[2];
+  private final float [] unrotatedPoint = new float[2];
   private final float[] boundPoints = new float[8];
   private final float[] mappedBounds = new float[8];
   private final RectF trappedRect = new RectF();
@@ -84,7 +86,20 @@ public abstract class Sticker {
     getBoundPoints(points);
     return points;
   }
+  public void setBorderColor(int color) {
+    if (borderPaint == null) {
+      borderPaint = new Paint();
+      borderPaint.setStyle(Paint.Style.STROKE);
+    }
+    borderPaint.setColor(color);
+  }
 
+  public void setBorderWidth(float width) {
+    this.borderWidth = width;
+    if (borderPaint != null) {
+      borderPaint.setStrokeWidth(width);
+    }
+  }
   public void getBoundPoints(@NonNull float[] points) {
     if (!isFlippedHorizontally) {
       if (!isFlippedVertically) {

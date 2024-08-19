@@ -2,6 +2,7 @@ package com.example.camera
 
 import android.animation.ValueAnimator
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
 import android.graphics.PointF
@@ -9,6 +10,7 @@ import android.graphics.Rect
 import android.graphics.YuvImage
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -80,6 +82,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                             val bitmap = BitmapFactory.decodeByteArray(jpegByteArray,
                                 0, jpegByteArray.size)
                             bitmap.toString()
+
+                            val width = bitmap.width
+                            val height = bitmap.height
+                            val partHeight = height / 3
+
+                            val part1 = Bitmap.createBitmap(bitmap, 0, 0, width, partHeight)
+                            val part2 = Bitmap.createBitmap(bitmap, 0, partHeight, width, partHeight)
+                            val part3 = Bitmap.createBitmap(bitmap, 0, 2 * partHeight, width, partHeight)
+
+                            Log.e("part", "process:>>>$part1 ", )
+                            Log.e("part", "process:>>>$part2 ", )
+                            Log.e("part", "process:>>>$part3 ", )
+
                         }
                     }
                 }

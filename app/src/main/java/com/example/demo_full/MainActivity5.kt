@@ -1,24 +1,17 @@
 package com.example.demo_full
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.View
-import androidx.core.net.toUri
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.demo_full.databinding.ActivityMain5Binding
-import com.xiaopo.flying.sticker.BitmapStickerIcon
 import com.xiaopo.flying.sticker.DrawableSticker
-import com.xiaopo.flying.sticker.Sticker
-import com.xiaopo.flying.sticker.StickerView
 import java.io.Serializable
+
 
 class MainActivity5 : AppCompatActivity() {
     private lateinit var binding: ActivityMain5Binding
@@ -30,7 +23,7 @@ class MainActivity5 : AppCompatActivity() {
         setContentView(binding.root)
 
         val imgUrlList = intent.getSerializableExtra("img_url") as ArrayList<Model_Img>
-        Log.e("IMG09", "onCreate:>>>$imgUrlList ", )
+        Log.e("IMG09", "onCreate:>>>$imgUrlList ")
         for (i in  imgUrlList){
             if (imgUrlList.size==1){
                 Glide.with(this)
@@ -151,7 +144,11 @@ class MainActivity5 : AppCompatActivity() {
                     })
             }
         }
+        binding.btnOne.setOnClickListener {
+            val params: ViewGroup.LayoutParams = binding.stickerView.getLayoutParams()
+            params.height = 200 // height
 
+        }
 
 
 

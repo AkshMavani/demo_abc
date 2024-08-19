@@ -11,6 +11,14 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+
+    <uses-feature android:name="android.hardware.camera" />
+
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +32,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
+        <activity
+            android:name="com.example.MainActivity9"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity8"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity_data"
+            android:exported="false" />
+        <activity
+            android:name="com.example.abc.Activity_Camera"
+            android:exported="false" />
         <activity
             android:name="com.example.camera.MainActivity"
             android:exported="false" />
@@ -55,10 +75,10 @@
             android:name=".MainActivity3"
             android:exported="false" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.abc.Activity_Camera1"
             android:exported="false" />
         <activity
-            android:name="com.example.abc.Activity_Camera"
+            android:name=".Activity_Foulder"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

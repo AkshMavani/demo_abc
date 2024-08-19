@@ -85,13 +85,15 @@ class MainActivity4 : AppCompatActivity(),Click_image {
     @SuppressLint("SuspiciousIndentation")
     override fun click(modelImg: Model_Img) {
         arr.add(modelImg)
+        Log.e("img123", "click:${modelImg.str} ")
+
         binding.btnClick.setOnClickListener {
-            val intent= Intent(this,activity_Multifit::class.java)
-                intent.putExtra("flag",false)
-                intent.putExtra("img_url",arr as Serializable)
-               startActivity(intent)
+            Log.e("img123", "click:${arr} ")
+            val intent = Intent(this, MainActivity5::class.java)
+            intent.putExtra("flag", false)
+            intent.putExtra("img_url", arr as Serializable)
+            startActivity(intent)
+        }
         }
     }
 
-
-}

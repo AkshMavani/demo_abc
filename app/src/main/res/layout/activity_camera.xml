@@ -6,30 +6,59 @@
     android:layout_height="match_parent"
     tools:context="com.example.abc.Activity_Camera">
 
-    <com.otaliastudios.cameraview.CameraView
-        android:id="@+id/camera1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:keepScreenOn="true"
-        app:cameraAudio="on"
-        app:cameraAutoFocusMarker="@string/cameraview_default_autofocus_marker"
-        app:cameraEngine="camera2"
-        app:cameraExperimental="true"
-        app:cameraFacing="back"
-        app:cameraFlash="auto"
-        app:cameraGestureLongTap="none"
-        app:cameraGesturePinch="zoom"
-        app:cameraGestureScrollHorizontal="filterControl1"
-        app:cameraGestureScrollVertical="exposureCorrection"
-        app:cameraGestureTap="autoFocus"
-        app:cameraGrid="off"
-        app:cameraMode="picture"
-        app:cameraPlaySounds="true"
-        app:cameraPreview="glSurface"
+    <!-- res/layout/activity_main.xml -->
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="3"
+        android:rowCount="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1" />
+
+    </GridLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

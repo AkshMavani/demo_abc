@@ -40,9 +40,9 @@ class ImageAdapter(private val mList: List<Model_Img>, private val context: Cont
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView)
             holder.itemView.setOnClickListener {
-//                val intent=Intent(context,MainActivity5::class.java)
+//                val intent=Intent(context,MainActivity_data::class.java)
 //                intent.putExtra("flag",false)
-//                intent.putExtra("img_url",mList as Serializable)
+//                intent.putExtra("img",itemPath.str)
 //                context.startActivity(intent)
                     click.click(itemPath)
 
