@@ -242,10 +242,13 @@ public class StickerView extends FrameLayout {
         // Draw the sticker
         sticker.draw(canvas);
 
-        if (i==1 || i==3){
+//        if (i==1 || i==3){
 
           //hlo
+          if (str_color.equals("IMG")){
             border(Color.RED,12);
+          }
+
           if (showBorder) {
             getStickerPoints(sticker, bitmapPoints);
 
@@ -266,7 +269,7 @@ public class StickerView extends FrameLayout {
           }
         }
 
-      }
+//      }
     }
 
     // Handle drawing borders and icons for the currently handling sticker
