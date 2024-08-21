@@ -1,9 +1,12 @@
 package com.xiaopo.flying.sticker;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
@@ -43,6 +46,10 @@ public abstract class Sticker {
 
   public boolean isFlippedHorizontally() {
     return isFlippedHorizontally;
+  }
+
+  public void setColorFilter(int color) {
+    borderPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
   }
 
   @NonNull

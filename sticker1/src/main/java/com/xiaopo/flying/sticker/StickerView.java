@@ -41,7 +41,9 @@ import java.util.List;
 public class StickerView extends FrameLayout {
 
   private final boolean showIcons;
+  public int color_data;
   private final boolean showBorder;
+  private static String str_color;
   private final boolean bringToFrontCurrentSticker;
 
   @IntDef({
@@ -112,6 +114,23 @@ public class StickerView extends FrameLayout {
 
   public StickerView(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
+  }
+  public void data(int color){
+
+    this.color_data=color;
+    Log.e("color_data", "data: "+color_data);
+    Log.e("color_data", "str: "+str_color);
+
+    border(Color.GREEN,10);
+  }
+
+  void border(int Color,int width){
+
+    borderPaint.setAntiAlias(true);
+    borderPaint.setColor(Color);
+    borderPaint.setStyle(Paint.Style.STROKE);
+    borderPaint.setStrokeWidth(15);
+    borderPaint.setAlpha(255);
   }
 
   public StickerView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -196,152 +215,25 @@ public class StickerView extends FrameLayout {
     drawStickers(canvas);
   }
 
-//  protected void drawStickers(Canvas canvas) {
-//    for (int i = 0; i < stickers.size(); i++) {
-//      Sticker sticker = stickers.get(i);
-//      if (sticker != null) {
-////        if (showBorder) {
-////          RectF bounds = sticker.getBound();
-////          canvas.drawRect(bounds, borderPaint);
-////        }
-//        borderPaint.setAntiAlias(true);
-//        borderPaint.setColor(Color.RED); // Set border color
-//        borderPaint.setStyle(Paint.Style.STROKE); // Set paint style to STROKE
-//        borderPaint.setStrokeWidth(5); // Set the stroke width for the border
-//        borderPaint.setAlpha(255); // Set alpha to full opacity
-//        sticker.draw(canvas);
-//      }
-//    }
-//
-//    if (handlingSticker != null && !locked && (showBorder || showIcons)) {
-//
-//      getStickerPoints(handlingSticker, bitmapPoints);
-//
-//      float x1 = bitmapPoints[0];
-//      float y1 = bitmapPoints[1];
-//      float x2 = bitmapPoints[2];
-//      float y2 = bitmapPoints[3];
-//      float x3 = bitmapPoints[4];
-//      float y3 = bitmapPoints[5];
-//      float x4 = bitmapPoints[6];
-//      float y4 = bitmapPoints[7];
-//
-//      if (showBorder) {
-//        canvas.drawLine(x1, y1, x2, y2, borderPaint);
-//        canvas.drawLine(x1, y1, x3, y3, borderPaint);
-//        canvas.drawLine(x2, y2, x4, y4, borderPaint);
-//        canvas.drawLine(x4, y4, x3, y3, borderPaint);
-//      }
-//
-//      //draw icons
-//      if (showIcons) {
-//        float rotation = calculateRotation(x4, y4, x3, y3);
-//        for (int i = 0; i < icons.size(); i++) {
-//          BitmapStickerIcon icon = icons.get(i);
-//          switch (icon.getPosition()) {
-//            case BitmapStickerIcon.LEFT_TOP:
-//
-//              configIconMatrix(icon, x1, y1, rotation);
-//              break;
-//
-//            case BitmapStickerIcon.RIGHT_TOP:
-//              configIconMatrix(icon, x2, y2, rotation);
-//              break;
-//
-//            case BitmapStickerIcon.LEFT_BOTTOM:
-//              configIconMatrix(icon, x3, y3, rotation);
-//              break;
-//
-//            case BitmapStickerIcon.RIGHT_BOTOM:
-//              configIconMatrix(icon, x4, y4, rotation);
-//              break;
-//          }
-//          icon.draw(canvas, borderPaint);
-//        }
-//      }
-//    }
-//  }
-//protected void drawStickers(Canvas canvas) {
-//  // Configure the border paint only once
-//  borderPaint.setAntiAlias(true);
-//  borderPaint.setColor(Color.RED); // Set border color
-//  borderPaint.setStyle(Paint.Style.STROKE); // Set paint style to STROKE
-//  borderPaint.setStrokeWidth(5); // Set the stroke width for the border
-//  borderPaint.setAlpha(255); // Set alpha to full opacity
-//
-//  // Iterate through each sticker and draw it along with its border
-//  for (int i = 0; i < stickers.size(); i++) {
-//    Sticker sticker = stickers.get(i);
-//    if (sticker != null) {
-//      // Draw the sticker
-//      sticker.draw(canvas);
-//
-//      // Draw the border if required
-//      if (showBorder) {
-//        RectF bounds = sticker.getMappedBound(); // Ensure you have a method to get the bounds
-//        if (bounds != null) {
-//          canvas.drawRect(bounds, borderPaint); // Draw the border around the sticker
-//        }
-//      }
-//    }
-//  }
-//
-//  // Handle drawing borders and icons for the currently handling sticker
-//  if (handlingSticker != null && !locked && (showBorder || showIcons)) {
-//    getStickerPoints(handlingSticker, bitmapPoints);
-//
-//    float x1 = bitmapPoints[0];
-//    float y1 = bitmapPoints[1];
-//    float x2 = bitmapPoints[2];
-//    float y2 = bitmapPoints[3];
-//    float x3 = bitmapPoints[4];
-//    float y3 = bitmapPoints[5];
-//    float x4 = bitmapPoints[6];
-//    float y4 = bitmapPoints[7];
-//
-//    if (showBorder) {
-//      canvas.drawLine(x1, y1, x2, y2, borderPaint);
-//      canvas.drawLine(x1, y1, x3, y3, borderPaint);
-//      canvas.drawLine(x2, y2, x4, y4, borderPaint);
-//      canvas.drawLine(x4, y4, x3, y3, borderPaint);
-//    }
-//
-//    // Draw icons
-//    if (showIcons) {
-//      float rotation = calculateRotation(x4, y4, x3, y3);
-//      for (int i = 0; i < icons.size(); i++) {
-//        BitmapStickerIcon icon = icons.get(i);
-//        switch (icon.getPosition()) {
-//          case BitmapStickerIcon.LEFT_TOP:
-//            configIconMatrix(icon, x1, y1, rotation);
-//            break;
-//
-//          case BitmapStickerIcon.RIGHT_TOP:
-//            configIconMatrix(icon, x2, y2, rotation);
-//            break;
-//
-//          case BitmapStickerIcon.LEFT_BOTTOM:
-//            configIconMatrix(icon, x3, y3, rotation);
-//            break;
-//
-//          case BitmapStickerIcon.RIGHT_BOTOM:
-//            configIconMatrix(icon, x4, y4, rotation);
-//            break;
-//        }
-//        icon.draw(canvas, borderPaint);
-//      }
-//    }
-//  }
-//}
+  private void drawBorder(Canvas canvas, Sticker sticker) {
+    Paint borderPaint = new Paint();
+    borderPaint.setStyle(Paint.Style.STROKE);
+    borderPaint.setStrokeWidth(5);  // Set border width
+    borderPaint.setColor(Color.RED);  // Set border color
 
+    // Get the sticker's bounding box
+    float[] points = getStickerPoints(sticker);
 
+    // Draw border around the sticker
+    canvas.drawLine(points[0], points[1], points[2], points[3], borderPaint);
+    canvas.drawLine(points[2], points[3], points[4], points[5], borderPaint);
+    canvas.drawLine(points[4], points[5], points[6], points[7], borderPaint);
+    canvas.drawLine(points[6], points[7], points[0], points[1], borderPaint);
+  }
   protected void drawStickers(Canvas canvas) {
     // Configure the border paint only once
-    borderPaint.setAntiAlias(true);
-    borderPaint.setColor(Color.RED); // Set border color
-    borderPaint.setStyle(Paint.Style.STROKE); // Set paint style to STROKE
-    borderPaint.setStrokeWidth(5); // Set the stroke width for the border
-    borderPaint.setAlpha(255); // Set alpha to full opacity
+
+
 
     // Iterate through each sticker and draw it along with its border
     for (int i = 0; i < stickers.size(); i++) {
@@ -350,25 +242,30 @@ public class StickerView extends FrameLayout {
         // Draw the sticker
         sticker.draw(canvas);
 
-        // Always draw the border, regardless of rotation
-        if (showBorder) {
-          getStickerPoints(sticker, bitmapPoints);
+        if (i==1 || i==3){
 
-          // Draw the border using the transformed points
-          float x1 = bitmapPoints[0];
-          float y1 = bitmapPoints[1];
-          float x2 = bitmapPoints[2];
-          float y2 = bitmapPoints[3];
-          float x3 = bitmapPoints[4];
-          float y3 = bitmapPoints[5];
-          float x4 = bitmapPoints[6];
-          float y4 = bitmapPoints[7];
+          //hlo
+            border(Color.RED,12);
+          if (showBorder) {
+            getStickerPoints(sticker, bitmapPoints);
 
-          canvas.drawLine(x1, y1, x2, y2, borderPaint);
-          canvas.drawLine(x2, y2, x4, y4, borderPaint);
-          canvas.drawLine(x4, y4, x3, y3, borderPaint);
-          canvas.drawLine(x3, y3, x1, y1, borderPaint);
+            // Draw the border using the transformed points
+            float x1 = bitmapPoints[0];
+            float y1 = bitmapPoints[1];
+            float x2 = bitmapPoints[2];
+            float y2 = bitmapPoints[3];
+            float x3 = bitmapPoints[4];
+            float y3 = bitmapPoints[5];
+            float x4 = bitmapPoints[6];
+            float y4 = bitmapPoints[7];
+
+            canvas.drawLine(x1, y1, x2, y2, borderPaint);
+            canvas.drawLine(x2, y2, x4, y4, borderPaint);
+            canvas.drawLine(x4, y4, x3, y3, borderPaint);
+            canvas.drawLine(x3, y3, x1, y1, borderPaint);
+          }
         }
+
       }
     }
 
@@ -884,18 +781,18 @@ public class StickerView extends FrameLayout {
     invalidate();
   }
 
-  @NonNull public StickerView addSticker(@NonNull Sticker sticker,int width,int height,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine) {
-    return addSticker(sticker, Sticker.Position.CENTER,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine);
+  @NonNull public StickerView addSticker(@NonNull Sticker sticker,int width,int height,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine,String str) {
+    return addSticker(sticker, Sticker.Position.CENTER,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine,str);
   }
 
   public StickerView addSticker(@NonNull final Sticker sticker,
-                                final @Sticker.Position int position,int width,int height,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine) {
+                                final @Sticker.Position int position,int width,int height,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine,String str) {
     if (ViewCompat.isLaidOut(this)) {
-      addStickerImmediately(sticker, position,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine);
+      addStickerImmediately(sticker, position,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine,str);
     } else {
       post(new Runnable() {
         @Override public void run() {
-          addStickerImmediately(sticker, position,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine);
+          addStickerImmediately(sticker, position,width,height,flag_one,flag_two,flag_three,flag_four,flag_five,flag_six,flag_seven,flag_eight,flag_nine,str);
         }
       });
     }
@@ -905,8 +802,9 @@ public class StickerView extends FrameLayout {
 
 
 
-  protected void addStickerImmediately(@NonNull Sticker sticker, @Sticker.Position int position, int desiredWidth, int desiredHeight,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine) {
-
+  protected void addStickerImmediately(@NonNull Sticker sticker, @Sticker.Position int position, int desiredWidth, int desiredHeight,Boolean flag_one,Boolean flag_two,Boolean flag_three,Boolean flag_four,Boolean flag_five,Boolean flag_six,Boolean flag_seven,Boolean flag_eight,Boolean flag_nine,String str) {
+    Log.e("TAG_DATA", "addStickerImmediately: "+str );
+    this.str_color=str;
     setStickerPosition(sticker, position);
 
     int intrinsicWidth = sticker.getDrawable().getIntrinsicWidth();
@@ -1279,5 +1177,6 @@ public class StickerView extends FrameLayout {
     void onStickerFlipped(@NonNull Sticker sticker);
 
     void onStickerDoubleTapped(@NonNull Sticker sticker);
+
   }
 }

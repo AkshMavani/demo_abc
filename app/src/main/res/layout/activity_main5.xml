@@ -28,9 +28,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+
         app:showBorder="true"
         app:showIcons="true">
-        <!-- custom, maybe you will like to put an ImageView-->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
