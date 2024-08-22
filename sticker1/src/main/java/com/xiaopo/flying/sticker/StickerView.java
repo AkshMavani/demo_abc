@@ -230,6 +230,8 @@ public class StickerView extends FrameLayout {
     canvas.drawLine(points[4], points[5], points[6], points[7], borderPaint);
     canvas.drawLine(points[6], points[7], points[0], points[1], borderPaint);
   }
+
+
   protected void drawStickers(Canvas canvas) {
     // Configure the border paint only once
 

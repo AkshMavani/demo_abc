@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".MainActivity5">
+    tools:context="com.example.blur.MainActivity5">
 
 <!--    <ImageView-->
 <!--        android:id="@+id/imageView_full"-->
@@ -32,6 +32,7 @@
         app:showBorder="true"
         app:showIcons="true">
         <ImageView
+            android:id="@+id/img_blur"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -75,4 +76,13 @@
             android:layout_height="wrap_content"
             android:text="1" />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recuycleView_blur"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/sticker_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
