@@ -8,78 +8,12 @@
     >
 
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Tvopen"
-        android:textSize="35sp"
+
         android:textColor="@color/black"
-        android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Open in" />
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/black"/>
 
-    <TextView
-        android:id="@+id/TvInbox"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:drawablePadding="10dp"
-        android:paddingLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Inbox" />
-
-
-
-    <TextView
-        android:id="@+id/TvDocumet"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-
-        android:drawablePadding="10dp"
-        android:paddingLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Document" />
-
-    <TextView
-        android:id="@+id/TvCamera0"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-
-        android:drawablePadding="10dp"
-        android:paddingLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Camera" />
-
-    <TextView
-        android:id="@+id/TvGallery0"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:drawablePadding="10dp"
-        android:paddingLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Gallery" />
-
-    <TextView
-        android:id="@+id/TvGoogleplus"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:drawablePadding="10dp"
-        android:paddingLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Google+" />
 </LinearLayout>
