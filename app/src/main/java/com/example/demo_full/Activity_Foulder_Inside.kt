@@ -20,6 +20,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
     private lateinit var binding: ActivityMain4Binding
     var arr:ArrayList<Model_Img> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMain4Binding.inflate(layoutInflater)
@@ -35,7 +36,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
         val images = intent?.let { getMediaInFolder(this, it) }
 
-        val imageAdapter = images?.let { ImageAdapter(images, this,this) }
+        val imageAdapter = images?.let { ImageAdapter12(this, images as ArrayList<Model_Img>) }
         imageRecyclerView.adapter = imageAdapter
     }
 
@@ -59,7 +60,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
             val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             while (it.moveToNext()) {
                 val imagePath = it.getString(imagePathColumn)
-                mediaList.add(Model_Img(imagePath))
+                mediaList.add(Model_Img(imagePath,"IMG"))
             }
         }
         val videoProjection = arrayOf(MediaStore.Video.Media.DATA)
@@ -75,7 +76,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
             val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
             while (it.moveToNext()) {
                 val videoPath = it.getString(videoPathColumn)
-                mediaList.add(Model_Img(videoPath))
+                mediaList.add(Model_Img(videoPath,"VIDEO"))
             }
         }
 

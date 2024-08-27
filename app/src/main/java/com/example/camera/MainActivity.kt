@@ -299,13 +299,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        val valid = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-        if (valid && !camera.isOpened) {
-            camera.open()
-        }
-    }
+//    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        val valid = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+//        if (valid && !camera.isOpened) {
+//            camera.open()
+//        }
+//    }
 
 
 }
