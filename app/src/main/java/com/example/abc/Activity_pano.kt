@@ -1,13 +1,15 @@
 package com.example.abc
 
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
 import android.util.Log
 import android.view.SurfaceView
 import android.view.View
@@ -17,8 +19,7 @@ import com.example.demo_full.databinding.ActivityPanoBinding
 import com.example.pano.ArcProgressBar
 import com.yalantis.ucrop.UCrop
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.OutputStream
 import java.util.UUID
 
 
@@ -41,12 +42,16 @@ class Activity_pano : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityPanoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        var path="/storage/emulated/0/Pictures/IMG_20240829_213142.jpg"
-        var destination=StringBuilder(UUID.randomUUID().toString()).append("jpg").toString()
+        val path="/storage/emulated/0/Pictures/IMG_20240829_213142.jpg"
+        val destination=StringBuilder(UUID.randomUUID().toString()).append("jpg").toString()
         val options = UCrop.Options()
         val sourceUri = File(path).toUri()
         val destinationUri = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), destination).toUri()
-
+            binding.btn.setOnClickListener {
+                val bitmap = getBitmapFromView(binding.cl)
+                binding.img4.setImageBitmap(bitmap)
+                bitmap?.let { it1 -> saveBitmapToGallery(this, it1, "MyImageTitle") }
+            }
         UCrop.of(sourceUri, destinationUri)
 
             .withAspectRatio(1F, 1F)
@@ -210,36 +215,36 @@ class Activity_pano : AppCompatActivity() {
 //        sensorManager.unregisterListener(sensorEventListener)
 //    }
 
-    fun saveLayoutAsImage(view: View, fileName: String): Boolean {
-        // Measure and layout the view
-        view.measure(
-            View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(view.height, View.MeasureSpec.EXACTLY)
-        )
-        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
-
-        // Create a bitmap from the view
-        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-
-        // Save the bitmap to storage
-        val storageDir = File(Environment.getExternalStorageDirectory().toString() + "/SavedLayouts")
-        if (!storageDir.exists()) {
-            storageDir.mkdirs()
-        }
-        val file = File(storageDir, "$fileName.png")
-        return try {
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-            true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
-    }
+//    fun saveLayoutAsImage(view: View, fileName: String): Boolean {
+//        // Measure and layout the view
+//        view.measure(
+//            View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
+//            View.MeasureSpec.makeMeasureSpec(view.height, View.MeasureSpec.EXACTLY)
+//        )
+//        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+//
+//        // Create a bitmap from the view
+//        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+//        val canvas = Canvas(bitmap)
+//        view.draw(canvas)
+//
+//        // Save the bitmap to storage
+//        val storageDir = File(Environment.getExternalStorageDirectory().toString() + "/SavedLayouts")
+//        if (!storageDir.exists()) {
+//            storageDir.mkdirs()
+//        }
+//        val file = File(storageDir, "$fileName.png")
+//        return try {
+//            val outputStream = FileOutputStream(file)
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+//            outputStream.flush()
+//            outputStream.close()
+//            true
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//            false
+//        }
+//    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
@@ -247,13 +252,58 @@ class Activity_pano : AppCompatActivity() {
             val intent=Intent(this,Activity_pano::class.java)
             intent.putExtra("CROP",resultUri.toString())
             setResult(101,intent)
-            Log.e("Result", "onActivityResult$resultUri ", )
+            Log.e("Result", "onActivityResult$resultUri ")
             //finish()
             binding.imageView3.setImageURI(resultUri)
 
                 //startActivity(intent)
         } else if (resultCode == UCrop.RESULT_ERROR) {
             val cropError = UCrop.getError(data!!)
+        }
+    }
+
+    fun getBitmapFromView(view: View): Bitmap? {
+        view.isDrawingCacheEnabled = true
+        view.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(view.drawingCache)
+        view.isDrawingCacheEnabled = false
+        return bitmap
+    }
+    fun saveBitmapToGallery(context: Context, bitmap: Bitmap, title: String) {
+        val fos: OutputStream?
+        try {
+            val values = ContentValues()
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, "$title.jpg")
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            values.put(
+                MediaStore.Images.Media.RELATIVE_PATH,
+                Environment.DIRECTORY_PICTURES + "/YourAppName"
+            )
+            values.put(MediaStore.Images.Media.IS_PENDING, true)
+
+            // Insert the content values to MediaStore
+            fos = context.contentResolver.openOutputStream(
+                context.contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    values
+                )!!
+            )
+            if (fos != null) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                fos.close()
+                values.clear()
+                values.put(MediaStore.Images.Media.IS_PENDING, false)
+
+                // Update MediaStore with the image details
+                context.contentResolver.update(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    values,
+                    null,
+                    null
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
