@@ -89,6 +89,10 @@
             android:name="com.example.abc.Activity_Camera1"
             android:exported="false" />
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
             android:name="com.example.abc.Activity_pano"
             android:exported="true">
             <intent-filter>

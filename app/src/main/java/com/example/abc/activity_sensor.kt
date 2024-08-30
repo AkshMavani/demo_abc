@@ -65,4 +65,5 @@ class activity_sensor : AppCompatActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Do nothing
-    }}
+    }
+}

@@ -1,9 +1,14 @@
 package com.example.demo_full
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.RecoverableSecurityException
 import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.pdf.PdfDocument
@@ -16,26 +21,41 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.example.abc.FileUtil
+import com.example.abc.FileUtil.renameFile
 import com.example.demo_full.databinding.ActivityMainDataBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 class MainActivity_data : AppCompatActivity() {
     private lateinit var binding: ActivityMainDataBinding
     lateinit var adapter: ImagePagerAdapter_DTA
     private lateinit var deleteFileLauncher: ActivityResultLauncher<IntentSenderRequest>
 
+
+
+    private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "File renamed successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to get user permission", Toast.LENGTH_SHORT).show()
+            }
+        }
         val data = intent.getStringExtra("img")
         val position = intent.getIntExtra("position", 0)
         val imageList = intent.getStringArrayListExtra("imgList") as ArrayList<Model_Img>
@@ -61,13 +81,23 @@ class MainActivity_data : AppCompatActivity() {
                     }
                 }
                 binding.buttonPdf.setOnClickListener {
-                    Log.e("PDF", "img:>>>$img")
-                    val pdfUri = convertImageToPdf(img.str)
-                    if (pdfUri != null) {
-                        Log.e("PDF", "uri:$pdfUri")
-                        openFileManagerForSaving(pdfUri)
+//                    Log.e("PDF", "img:>>>$img")
+//                    val pdfUri = convertImageToPdf(img.str)
+//                    if (pdfUri != null) {
+//                        Log.e("PDF", "uri:$pdfUri")
+//                        openFileManagerForSaving(pdfUri)
+//                    } else {
+//                        Toast.makeText(this@MainActivity_data, "Failed to convert image to PDF", Toast.LENGTH_SHORT).show()
+//                    }
+                  //  FileUtil.initialize(intentSenderLauncher);
+
+                    val filePath = "/storage/emulated/0/Pictures/IMG_20240826_185729.jpg"
+                    val newName = "new_image_name"
+
+                    if (!renameFile(this@MainActivity_data, img.str, newName)) {
+                        Toast.makeText(this@MainActivity_data, "File renaming failed.", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this@MainActivity_data, "Failed to convert image to PDF", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity_data, "File renamed successfully!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -195,5 +225,68 @@ class MainActivity_data : AppCompatActivity() {
             }
         }
     }
+
+    private fun renameFile(context: Context, filePath: String, newName: String): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            renameFileScopedStorage(context, filePath, newName)
+        } else {
+            renameFileLegacy(filePath, newName)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun renameFileScopedStorage(context: Context, filePath: String, newName: String): Boolean {
+        val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val selection = "${MediaStore.Images.Media.DATA}=?"
+        val selectionArgs = arrayOf(filePath)
+
+        val cursor: Cursor? = context.contentResolver.query(collection, projection, selection, selectionArgs, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+            val fileUri = Uri.withAppendedPath(collection, id.toString())
+
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, newName)
+            }
+
+            try {
+                val updated = context.contentResolver.update(fileUri, contentValues, null, null)
+                if (updated > 0) {
+                    Log.d("FileUtil", "File renamed successfully to $newName")
+                    return true
+                }
+            } catch (e: RecoverableSecurityException) {
+                val intentSender: IntentSender = e.userAction.actionIntent.intentSender
+                intentSenderLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+            } catch (e: Exception) {
+                Log.e("FileUtil", "File renaming failed: ${e.message}")
+            } finally {
+                cursor.close()
+            }
+        } else {
+            Log.e("FileUtil", "File not found")
+        }
+        cursor?.close()
+        return false
+    }
+
+    private fun renameFileLegacy(filePath: String, newName: String): Boolean {
+        val oldFile = File(filePath)
+        val extension = oldFile.name.substring(oldFile.name.lastIndexOf("."))
+        val newFileName = "$newName$extension"
+        val newFile = File(oldFile.parent, newFileName)
+
+        return if (oldFile.renameTo(newFile)) {
+            Log.d("FileUtil", "File renamed successfully to ${newFile.absolutePath}")
+            true
+        } else {
+            Log.e("FileUtil", "File renaming failed")
+            false
+        }
+    }
+
+
+
 
 }
