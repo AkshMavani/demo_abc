@@ -30,8 +30,11 @@ import com.bumptech.glide.Glide
 //    override fun getItemCount() = folders.size
 //}
 
+interface foulder_click{
+    fun click(name:String)
+}
 
-class FolderAdapter(private val mList: List<Pair<String, String>>, private val context: Context) : RecyclerView.Adapter<FolderAdapter.ViewHolder>() {
+class FolderAdapter(private val mList: List<Pair<String, String>>, private val context: Context,var foulderClick: foulder_click) : RecyclerView.Adapter<FolderAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,9 +54,10 @@ class FolderAdapter(private val mList: List<Pair<String, String>>, private val c
 
         holder.itemView.setOnClickListener {
             Log.e("FLP", "onBindViewHolder:$ItemsViewModel ", )
-            val intent=Intent(context,MainActivity4::class.java)
-            intent.putExtra("Foulder",ItemsViewModel.first)
-            context.startActivity(intent)
+//            val intent=Intent(context,MainActivity4::class.java)
+//            intent.putExtra("Foulder",ItemsViewModel.first)
+//            context.startActivity(intent)
+            foulderClick.click(ItemsViewModel.first)
         }
 
     }

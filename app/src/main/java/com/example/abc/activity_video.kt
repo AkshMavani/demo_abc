@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.MediaController
-import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.example.demo_full.databinding.ActivityVideoBinding
@@ -27,42 +26,49 @@ class activity_video : AppCompatActivity() {
         binding.videoView.setMediaController(null)
 
         binding.videoView.setVideoURI(videoUrl?.toUri())
+      binding.videoView.requestFocus()
         binding.videoView.start()
+        binding.seekBar.setMax(binding.videoView.getDuration());
+       // updateSeekBar()
 
-        binding.playPauseButton.setOnClickListener {
-            if (binding.videoView.isPlaying) {
-                binding.videoView.pause()
-                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-            } else {
-                binding.videoView.start()
-                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
-            }
-        }
+
+//        binding.playPauseButton.setOnClickListener {
+//            if (binding.videoView.isPlaying) {
+//                binding.videoView.pause()
+//                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+//            } else {
+//                binding.videoView.start()
+//                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
+//            }
+//        }
 
         // Set up the seek bar
+        binding.seekBar.max=binding.videoView.duration
+
         binding.videoView.setOnPreparedListener { mediaPlayer ->
             Log.e("TAG_DTA", "onCreate:>>>${binding.videoView.duration} ")
-            handler.postDelayed(object : Runnable {
-                override fun run() {
-                    binding.seekBar.progress = binding.videoView.currentPosition
-                    val data=formatDuration(binding.videoView.duration.toLong())
-                    binding.txtTime.text=data.toString()
-                    handler.postDelayed(this, 100)
-                }
-            }, 100)
+//            handler.postDelayed(object : Runnable {
+//                override fun run() {
+//                    Log.e("TAG_DTA", "run:>>>${binding.videoView.currentPosition} ", )
+//                    binding.seekBar.progress = binding.videoView.currentPosition
+//                    val data=formatDuration(binding.videoView.duration.toLong())
+//                    binding.txtTime.text=data.toString()
+//                    handler.postDelayed(this, 100)
+//                }
+//            }, 1000)
 
-            binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                    progress_dta=progress
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar) {
-
-                        binding.videoView.seekTo(progress_dta)
-
-                }
-            })
+//            binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+//                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+//                    progress_dta=progress
+//                }
+//
+//                override fun onStartTrackingTouch(seekBar: SeekBar) {}
+//                override fun onStopTrackingTouch(seekBar: SeekBar) {
+//
+//                        binding.videoView.seekTo(progress_dta)
+//
+//                }
+//            })
             binding.volumeButton.setOnClickListener {
                 if (isMuted) {
                     mediaPlayer.setVolume(1f, 1f)
@@ -95,6 +101,7 @@ class activity_video : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+
     }
 
 
@@ -113,5 +120,20 @@ class activity_video : AppCompatActivity() {
         timeString += seconds.toString() + "s"
         return timeString.trim { it <= ' ' }
     }
+
+    private fun updateSeekBar() {
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                if (binding.videoView != null && binding.videoView.isPlaying()) {
+                    val currentPosition: Int = binding.videoView.getCurrentPosition()
+                   binding.seekBar.setProgress(currentPosition)
+
+                    // Update SeekBar and UI every second
+                    handler.postDelayed(this, 1000)
+                }
+            }
+        }, 1000)
+    }
+
 
 }

@@ -20,6 +20,7 @@
     <string name="finish">finish</string>
     <string name="next">next</string>
     <string name="back">back</string>
+    <string name="txt_language" />
     <string-array name="app_items">
         <item>Item 1</item>
         <item>Item 2</item>

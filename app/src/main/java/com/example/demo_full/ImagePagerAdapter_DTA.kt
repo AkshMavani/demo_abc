@@ -60,7 +60,7 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
         }
         holder.itemView.setOnClickListener {
             clickImg1.click(imageUrl)
-            imageUrls.removeAt(position)
+           // imageUrls.removeAt(position)
 //            notifyDataSetChanged()
         }
     }

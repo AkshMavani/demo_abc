@@ -32,6 +32,9 @@
             android:name=".Activity_Foulder"
             android:exported="false" />
         <activity
+            android:name="com.example.abc.Activity_pano"
+            android:exported="false" />
+        <activity
             android:name="com.example.abc.activity_video"
             android:exported="false" />
         <activity
@@ -68,7 +71,7 @@
             android:name="com.example.multifit.activity_Multifit"
             android:exported="false" />
         <activity
-            android:name="com.example.language.Activity_Language"
+            android:name="com.example.abc.Activity_Camera1"
             android:exported="false" />
         <activity
             android:name="com.example.MainActivity"
@@ -86,14 +89,14 @@
             android:name=".MainActivity3"
             android:exported="false" />
         <activity
-            android:name="com.example.abc.Activity_Camera1"
+            android:name="com.example.language.Activity_Language"
             android:exported="false" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name="com.example.abc.Activity_pano"
+            android:name="com.example.abc.ActivityPrinter"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
