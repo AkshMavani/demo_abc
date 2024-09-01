@@ -26,7 +26,7 @@ class Activity_Foulder : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var folderRecyclerView: RecyclerView
     private lateinit var folderAdapter: FolderAdapter
-
+    var flag=false
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -67,6 +67,7 @@ class Activity_Foulder : AppCompatActivity() {
 
         folderAdapter = FolderAdapter(getMediaFolders(this), this, click)
         folderRecyclerView.adapter = folderAdapter
+
     }
 
     private fun moveMediaToFolder(mediaPath: String, folderName: String) {

@@ -22,7 +22,7 @@ class Activity_Camera1 : AppCompatActivity() {
         setContentView(binding.root)
         cameraView = findViewById(R.id.cameraView12)
         cameraView.setLifecycleOwner(this)
-            Log.e("camera12", "onCreate:>>>${cameraView.filter} ")
+        Log.e("camera12", "onCreate:>>>${cameraView.filter} ")
         Log.e("camera12", "onCreate:>>>${cameraView.filter} ")
          val allFilters = Filters.values()
         for (i in allFilters){

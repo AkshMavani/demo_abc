@@ -1,139 +1,137 @@
 package com.example.abc
 
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import android.os.Looper
 import android.widget.MediaController
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
+import com.example.demo_full.R
 import com.example.demo_full.databinding.ActivityVideoBinding
 
 class activity_video : AppCompatActivity() {
     private lateinit var binding: ActivityVideoBinding
     private var mediaController: MediaController? = null
-    private val handler = Handler()
-    var progress_dta:Int=0
+
+    private var progress_dta: Int = 0
     private var isMuted = false
     private var isLandscape = false
+    private var isPlaying = false
+    private var lastVolume = 0
+    private lateinit var audioManager: AudioManager
+    private var handler = Handler(Looper.getMainLooper())
+    private lateinit var runnable: Runnable
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val videoUrl = intent.getStringExtra("VIDEO_URL")
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         mediaController = MediaController(this@activity_video)
         binding.videoView.setMediaController(null)
+        binding.videoView.setVideoPath(videoUrl)
 
-        binding.videoView.setVideoURI(videoUrl?.toUri())
-      binding.videoView.requestFocus()
-        binding.videoView.start()
-        binding.seekBar.setMax(binding.videoView.getDuration());
-       // updateSeekBar()
+        binding.videoView.setOnPreparedListener {
+            binding.txtEndTime.text = formatDuration(binding.videoView.duration)
+            binding.seekBar.max = binding.videoView.duration
+            binding.videoView.start()
+            updateSeekBar()
+            binding.playPauseButton.isEnabled = true
+        }
 
-
-//        binding.playPauseButton.setOnClickListener {
-//            if (binding.videoView.isPlaying) {
-//                binding.videoView.pause()
-//                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_play)
-//            } else {
-//                binding.videoView.start()
-//                binding.playPauseButton.setImageResource(android.R.drawable.ic_media_pause)
-//            }
-//        }
-
-        // Set up the seek bar
-        binding.seekBar.max=binding.videoView.duration
-
-        binding.videoView.setOnPreparedListener { mediaPlayer ->
-            Log.e("TAG_DTA", "onCreate:>>>${binding.videoView.duration} ")
-//            handler.postDelayed(object : Runnable {
-//                override fun run() {
-//                    Log.e("TAG_DTA", "run:>>>${binding.videoView.currentPosition} ", )
-//                    binding.seekBar.progress = binding.videoView.currentPosition
-//                    val data=formatDuration(binding.videoView.duration.toLong())
-//                    binding.txtTime.text=data.toString()
-//                    handler.postDelayed(this, 100)
-//                }
-//            }, 1000)
-
-//            binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-//                    progress_dta=progress
-//                }
-//
-//                override fun onStartTrackingTouch(seekBar: SeekBar) {}
-//                override fun onStopTrackingTouch(seekBar: SeekBar) {
-//
-//                        binding.videoView.seekTo(progress_dta)
-//
-//                }
-//            })
-            binding.volumeButton.setOnClickListener {
-                if (isMuted) {
-                    mediaPlayer.setVolume(1f, 1f)
-                    binding.volumeButton.setImageResource(android.R.drawable.ic_lock_silent_mode_off)
-                    isMuted = false
-                } else {
-                    mediaPlayer.setVolume(0f, 0f)
-                    binding.volumeButton.setImageResource(android.R.drawable.ic_lock_silent_mode)
-                    isMuted = true
+        binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    binding.videoView.seekTo(progress)
                 }
             }
 
-        }
-        binding.splitBtn.setOnClickListener {
-            if (isLandscape) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                isLandscape = false;
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
+        binding.playPauseButton.isEnabled = false
+        binding.playPauseButton.setOnClickListener {
+            if (isPlaying) {
+                pauseVideo()
             } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                isLandscape = true;
+                playVideo()
             }
         }
 
-
-        binding.videoView.setOnCompletionListener {
-            binding.playPauseButton.setImageResource(android.R.drawable.ic_media_play)
+        binding.volumeButton.setOnClickListener {
+            if (isMuted) {
+                turnOnMusic()
+            } else {
+                turnOffMusic()
+            }
         }
+
+        binding.splitBtn.setOnClickListener {
+            isLandscape = !isLandscape
+            requestedOrientation = if (isLandscape) {
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            } else {
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        }
+    }
+
+    private fun playVideo() {
+        binding.videoView.start()
+        isPlaying = true
+        binding.playPauseButton.setImageResource(R.drawable.baseline_pause_24)
+        updateSeekBar()
+    }
+
+    private fun pauseVideo() {
+        binding.videoView.pause()
+        isPlaying = false
+        binding.playPauseButton.setImageResource(R.drawable.baseline_play_arrow_24)
+        handler.removeCallbacks(runnable)
+    }
+
+    private fun updateSeekBar() {
+        runnable = object : Runnable {
+            override fun run() {
+                binding.txtTime.text = formatDuration(binding.videoView.currentPosition)
+                binding.seekBar.progress = binding.videoView.currentPosition
+                handler.postDelayed(this, 1000) // Update every second
+            }
+        }
+        handler.post(runnable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-
+        handler.removeCallbacks(runnable)
     }
 
-
-
-    fun formatDuration(duration: Long): String? {
+    private fun formatDuration(duration: Int): String {
         val hours = duration / 3600000
-        val minutes = duration % 3600000 / 60000
-        val seconds = duration % 60000 / 1000
-        var timeString = ""
-        if (hours > 0) {
-            timeString += hours.toString() + "h "
-        }
-        if (minutes > 0) {
-            timeString += minutes.toString() + "m "
-        }
-        timeString += seconds.toString() + "s"
-        return timeString.trim { it <= ' ' }
+        val minutes = (duration % 3600000) / 60000
+        val seconds = (duration % 60000) / 1000
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
-    private fun updateSeekBar() {
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                if (binding.videoView != null && binding.videoView.isPlaying()) {
-                    val currentPosition: Int = binding.videoView.getCurrentPosition()
-                   binding.seekBar.setProgress(currentPosition)
-
-                    // Update SeekBar and UI every second
-                    handler.postDelayed(this, 1000)
-                }
-            }
-        }, 1000)
+    private fun turnOnMusic() {
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, 0)
+        isMuted = false
     }
 
-
+    private fun turnOffMusic() {
+        lastVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0)
+        isMuted = true
+    }
 }
