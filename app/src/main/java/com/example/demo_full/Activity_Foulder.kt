@@ -138,6 +138,7 @@ class Activity_Foulder : AppCompatActivity() {
     fun getMediaFolders(context: Context): List<Pair<String, String>> {
         val folders = mutableListOf<Pair<String, String>>()
         val seenFolders = mutableSetOf<String>()
+        var moviesFolder: Pair<String, String>? = null
 
         val imageProjection = arrayOf(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA)
         val videoProjection = arrayOf(MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA)
@@ -162,7 +163,11 @@ class Activity_Foulder : AppCompatActivity() {
 
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
-                    folders.add(Pair(folderName, imagePath))
+                    if (folderName.equals("Movies", ignoreCase = true)) {
+                        moviesFolder = Pair(folderName, imagePath)
+                    } else {
+                        folders.add(Pair(folderName, imagePath))
+                    }
                 }
             }
         }
@@ -175,7 +180,6 @@ class Activity_Foulder : AppCompatActivity() {
             null,
             sortOrder
         )
-
         videoCursor?.use {
             val folderNameColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
             val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
