@@ -35,7 +35,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_launcher_background"
+                            android:padding="@dimen/_12sdp"
+                            android:src="@drawable/a14"
                             android:layout_height="wrap_content"/>
                        <TextView
                            android:layout_width="match_parent"
@@ -61,7 +62,8 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_launcher_background"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/a4"
                         android:layout_height="wrap_content"/>
                     <TextView
                         android:layout_width="match_parent"
@@ -81,7 +83,7 @@
             android:layout_height="@dimen/_100sdp">
                <androidx.cardview.widget.CardView
                    android:layout_width="@dimen/_150sdp"
-                   app:cardBackgroundColor="@color/black"
+                   app:cardBackgroundColor="@color/Alien_Green"
                    android:id="@+id/caed_language_third"
                    android:layout_marginRight="@dimen/_4sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
@@ -94,7 +96,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_launcher_background"
+                            android:src="@drawable/a9"
+                            android:padding="@dimen/_12sdp"
                             android:layout_height="wrap_content"/>
                        <TextView
                            android:layout_width="match_parent"
@@ -107,7 +110,7 @@
                </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/_150sdp"
-                   app:cardBackgroundColor="@color/Red"
+                   app:cardBackgroundColor="@color/Aztec_Purple"
                 android:id="@+id/caed_language_four"
                 android:layout_marginStart="@dimen/_4sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
@@ -120,7 +123,8 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_launcher_background"
+                        android:padding="@dimen/_12sdp"
+                        android:src="@drawable/a17"
                         android:layout_height="wrap_content"/>
                     <TextView
                         android:layout_width="match_parent"
@@ -140,7 +144,7 @@
             android:layout_height="@dimen/_100sdp">
                <androidx.cardview.widget.CardView
                    android:layout_width="@dimen/_150sdp"
-                   app:cardBackgroundColor="@color/black"
+                   app:cardBackgroundColor="@color/Bashful_Pink"
                    android:id="@+id/caed_language_five"
                    android:layout_marginRight="@dimen/_4sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
@@ -153,11 +157,13 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_launcher_background"
+                            android:src="@drawable/a17"
+                            android:padding="@dimen/_12sdp"
                             android:layout_height="wrap_content"/>
                        <TextView
                            android:layout_width="match_parent"
                            android:text="hwllo"
+
                            android:textSize="@dimen/_14ssp"
                            android:gravity="center"
                            android:textColor="@color/blue"
@@ -166,7 +172,7 @@
                </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/_150sdp"
-                   app:cardBackgroundColor="@color/Red"
+                   app:cardBackgroundColor="@color/Bee_Yellow"
                 android:id="@+id/caed_language_six"
                 android:layout_marginStart="@dimen/_4sdp"
                 app:cardCornerRadius="@dimen/_10sdp"
@@ -179,7 +185,8 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_launcher_background"
+                        android:src="@drawable/a8"
+                        android:padding="@dimen/_12sdp"
                         android:layout_height="wrap_content"/>
                     <TextView
                         android:layout_width="match_parent"
@@ -201,7 +208,7 @@
                <androidx.cardview.widget.CardView
                    android:id="@+id/caed_language_seven"
                    android:layout_width="@dimen/_150sdp"
-                   app:cardBackgroundColor="@color/black"
+                   app:cardBackgroundColor="@color/Bright_Neon_Pink"
                   android:layout_gravity="center"
                    android:layout_marginRight="@dimen/_4sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
@@ -214,7 +221,8 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_launcher_background"
+                            android:padding="@dimen/_12sdp"
+                            android:src="@drawable/a12"
                             android:layout_height="wrap_content"/>
                        <TextView
                            android:layout_width="match_parent"
