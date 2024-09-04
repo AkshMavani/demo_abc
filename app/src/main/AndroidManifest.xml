@@ -16,6 +16,13 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- For Android 10 and above, add these permissions -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:targetApi="30" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -28,6 +35,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
+        <activity
+            android:name="com.example.abc.MainActivityqrcode"
+            android:exported="false" />
+        <activity
+            android:name=".video"
+            android:exported="false" />
         <activity
             android:name="com.example.abc.ActivityBotton"
             android:exported="false" />
@@ -98,6 +111,13 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".VideoTrimmerActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.SlidrActivityTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activity_Foulder"
             android:exported="true">

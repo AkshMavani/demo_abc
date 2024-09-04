@@ -79,4 +79,11 @@ dependencies {
    // implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
 
     implementation 'com.github.yalantis:ucrop:2.2.8'
+
+    implementation 'com.github.Ahmedbadereldin:Video-Trimmer-Android:1.0.4'
+    implementation 'life.knowledge4:k4l-video-trimmer:1.0'
+
+
+    implementation 'com.github.freddyfang:android-video-trimmer:v1.0.0'
+    //implementation 'com.github.a914-gowtham:android-video-trimmer:x.y.z'
 }

@@ -53,6 +53,7 @@ class MainActivity_data : AppCompatActivity() {
     private var pendingNewName: String? = null
 
     private var pendingFilePath1: String? = null
+    var click=false
     private var pendingIntent: Intent? = null
 
     private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
@@ -93,14 +94,28 @@ class MainActivity_data : AppCompatActivity() {
             pendingIntent = null
         }
 
-
+        binding.img111.setOnClickListener {
+            binding.img111.setImageResource(R.drawable.baseline_heart_broken_24)
+        }
         val data = intent.getStringExtra("img")
         val position = intent.getIntExtra("position", 0)
         val imageList = intent.getStringArrayListExtra("imgList") as ArrayList<Model_Img>
         val clickImg = object : click_img {
             override fun click(img: Model_Img) {
+                click=!click
+                if (click){
+                    binding.buttonPdf.visibility=View.GONE
+                    binding.buttonDelete.visibility=View.GONE
+                    binding.buttonMove.visibility=View.GONE
+                    binding.buttonRename.visibility=View.GONE
+                    binding.cl.visibility=View.GONE
+                    binding.ll12.visibility=View.GONE
+                }else{
+                    binding.cl.visibility=View.VISIBLE
+                    binding.ll12.visibility=View.VISIBLE
+                }
+
                 Log.e("PDF123", "click:>>>PDF#####${img.str}")
-                binding.ll.visibility = View.VISIBLE
                 binding.buttonDelete.setOnClickListener {
                     if (img.type == "IMG") {
                         val imageUri = getImageContentUri(img.str)
