@@ -36,6 +36,12 @@
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
         <activity
+            android:name=".Activity_Foulder"
+            android:exported="false" />
+        <activity
+            android:name="com.example.abc.MainActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.abc.MainActivityqrcode"
             android:exported="false" />
         <activity
@@ -119,7 +125,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.abc.splashscreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

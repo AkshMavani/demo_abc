@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/awesome-code-scanner" />
             <option value="$PROJECT_DIR$/cameraview" />
             <option value="$PROJECT_DIR$/photoeditor" />
             <option value="$PROJECT_DIR$/recyclerwheelview" />

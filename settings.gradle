@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        jcenter()
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -9,11 +8,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        jcenter()
+
         google()
         mavenCentral()
-            maven { url 'https://jitpack.io' }
 
+        maven { url 'https://jitpack.io' }
     }
 
 }
@@ -23,3 +22,4 @@ include ':cameraview'
 include ':photoeditor'
 include ':sticker1'
 include ':recyclerwheelview'
+include ':awesome-code-scanner'

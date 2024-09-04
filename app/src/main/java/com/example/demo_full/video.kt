@@ -10,38 +10,40 @@ import life.knowledge4.videotrimmer.K4LVideoTrimmer
 import life.knowledge4.videotrimmer.interfaces.OnTrimVideoListener
 
 
-class video : AppCompatActivity(),OnTrimVideoListener {
+class video : AppCompatActivity() {
     private lateinit var videoTrimmer: K4LVideoTrimmer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video2)
-        val inteent=intent.getStringExtra("video")
+        val inteent = intent.getStringExtra("video")
         Log.e("videourl", "onCreate:>>>$inteent ")
-
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
-
-        val videoUriString = intent.getStringExtra("video")
-        Log.e("videourl", "onCreate:>>>$videoUriString ")
-
-        videoTrimmer = findViewById<View>(R.id.timeLine) as K4LVideoTrimmer
-        videoTrimmer.setMaxDuration(30) // Set maximum duration in seconds
-        videoTrimmer.setOnTrimVideoListener(this)
-
-        videoUriString?.let {
-            videoTrimmer.setVideoURI(Uri.parse(it))
-        }
     }
+}
 
-    override fun getResult(uri: Uri?) {
-        uri?.let {
-            Log.d("TrimmedVideoPath", "Trimmed video saved at: ${it.path}")
-            // You can handle the trimmed video URI here
-        }
-    }
-
-    override fun cancelAction() {
-
-    }
+//        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
+//
+//        val videoUriString = intent.getStringExtra("video")
+//        Log.e("videourl", "onCreate:>>>$videoUriString ")
+//
+//        videoTrimmer = findViewById<View>(R.id.timeLine) as K4LVideoTrimmer
+//        videoTrimmer.setMaxDuration(30) // Set maximum duration in seconds
+//        videoTrimmer.setOnTrimVideoListener(this)
+//
+//        videoUriString?.let {
+//            videoTrimmer.setVideoURI(Uri.parse(it))
+//        }
+//    }
+//
+//    override fun getResult(uri: Uri?) {
+//        uri?.let {
+//            Log.d("TrimmedVideoPath", "Trimmed video saved at: ${it.path}")
+//            // You can handle the trimmed video URI here
+//        }
+//    }
+//
+//    override fun cancelAction() {
+//
+//    }
 
 //    override fun cancelAction() {
 //        videoTrimmer.destroy()
@@ -59,4 +61,3 @@ class video : AppCompatActivity(),OnTrimVideoListener {
 //    override fun onVideoPrepared() {
 //
 //    }
-}

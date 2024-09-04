@@ -13,6 +13,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Build
@@ -104,10 +105,6 @@ class MainActivity_data : AppCompatActivity() {
             override fun click(img: Model_Img) {
                 click=!click
                 if (click){
-                    binding.buttonPdf.visibility=View.GONE
-                    binding.buttonDelete.visibility=View.GONE
-                    binding.buttonMove.visibility=View.GONE
-                    binding.buttonRename.visibility=View.GONE
                     binding.cl.visibility=View.GONE
                     binding.ll12.visibility=View.GONE
                 }else{
@@ -472,48 +469,48 @@ class MainActivity_data : AppCompatActivity() {
     }
 
 
-    private fun createPdfWithImage(IMAGE_PATH:String) {
-        val pdfDocument = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
-        val page = pdfDocument.startPage(pageInfo)
-        val canvas: Canvas = page.canvas
-
-        try {
-            // Load the image from the file
-            val imageFile = File(IMAGE_PATH)
-            if (imageFile.exists()) {
-                val bitmap = BitmapFactory.decodeFile(IMAGE_PATH)
-
-                // Draw the image on the PDF
-                canvas.drawBitmap(bitmap, 0f, 0f, null)
-
-                // Optional: Draw text on the PDF
-//                val paint = Paint().apply {
-//                    color = Color.BLACK
-//                    textSize = 20f
-//                    isAntiAlias = true
-//                }
-//               // canvas.drawText("Image added to PDF", 80f, 50f, paint)
-
-                pdfDocument.finishPage(page)
-
-                // Save the PDF file
-                val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), PDF_FILE_NAME)
-                pdfDocument.writeTo(FileOutputStream(file))
-                Toast.makeText(this, "PDF created successfully at ${file.absolutePath}", Toast.LENGTH_SHORT).show()
-
-                // Print the PDF
-                printPdf(file)
-            } else {
-                Toast.makeText(this, "Image file does not exist.", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "Error creating PDF: ${e.message}", Toast.LENGTH_LONG).show()
-        } finally {
-            pdfDocument.close()
-        }
-    }
+//    private fun createPdfWithImage(IMAGE_PATH:String) {
+//        val pdfDocument = PdfDocument()
+//        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+//        val page = pdfDocument.startPage(pageInfo)
+//        val canvas: Canvas = page.canvas
+//
+//        try {
+//            // Load the image from the file
+//            val imageFile = File(IMAGE_PATH)
+//            if (imageFile.exists()) {
+//                val bitmap = BitmapFactory.decodeFile(IMAGE_PATH)
+//
+//                // Draw the image on the PDF
+//                canvas.drawBitmap(bitmap, 0f, 0f, null)
+//
+//                // Optional: Draw text on the PDF
+////                val paint = Paint().apply {
+////                    color = Color.BLACK
+////                    textSize = 20f
+////                    isAntiAlias = true
+////                }
+////               // canvas.drawText("Image added to PDF", 80f, 50f, paint)
+//
+//                pdfDocument.finishPage(page)
+//
+//                // Save the PDF file
+//                val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), PDF_FILE_NAME)
+//                pdfDocument.writeTo(FileOutputStream(file))
+//                Toast.makeText(this, "PDF created successfully at ${file.absolutePath}", Toast.LENGTH_SHORT).show()
+//
+//                // Print the PDF
+//                printPdf(file)
+//            } else {
+//                Toast.makeText(this, "Image file does not exist.", Toast.LENGTH_SHORT).show()
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            Toast.makeText(this, "Error creating PDF: ${e.message}", Toast.LENGTH_LONG).show()
+//        } finally {
+//            pdfDocument.close()
+//        }
+//    }
 
     private fun printPdf(file: File) {
         val printManager = getSystemService(PRINT_SERVICE) as PrintManager
@@ -556,4 +553,53 @@ class MainActivity_data : AppCompatActivity() {
         }
         printManager.print("Document", printAdapter, null)
     }
+    private fun createPdfWithImage(IMAGE_PATH: String) {
+        val pdfDocument = PdfDocument()
+        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+        val page = pdfDocument.startPage(pageInfo)
+        val canvas: Canvas = page.canvas
+
+        try {
+            // Load the image from the file
+            val imageFile = File(IMAGE_PATH)
+            if (imageFile.exists()) {
+                val bitmap = BitmapFactory.decodeFile(IMAGE_PATH)
+
+                // Get the size of the PDF page and the image
+                val pdfWidth = pageInfo.pageWidth
+                val pdfHeight = pageInfo.pageHeight
+                val imageWidth = bitmap.width
+                val imageHeight = bitmap.height
+
+                // Calculate the scale and position for center-crop
+                val scale = maxOf(pdfWidth / imageWidth.toFloat(), pdfHeight / imageHeight.toFloat())
+                val scaledWidth = imageWidth * scale
+                val scaledHeight = imageHeight * scale
+                val left = (pdfWidth - scaledWidth) / 2
+                val top = (pdfHeight - scaledHeight) / 2
+
+                // Draw the image on the PDF, center-cropped
+                val destRect = RectF(left, top, left + scaledWidth, top + scaledHeight)
+                canvas.drawBitmap(bitmap, null, destRect, null)
+
+                pdfDocument.finishPage(page)
+
+                // Save the PDF file
+                val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), PDF_FILE_NAME)
+                pdfDocument.writeTo(FileOutputStream(file))
+                Toast.makeText(this, "PDF created successfully at ${file.absolutePath}", Toast.LENGTH_SHORT).show()
+
+                // Print the PDF
+                printPdf(file)
+            } else {
+                Toast.makeText(this, "Image file does not exist.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Error creating PDF: ${e.message}", Toast.LENGTH_LONG).show()
+        } finally {
+            pdfDocument.close()
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.demo_full
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -32,7 +34,7 @@ class Activity_Foulder : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         hideSystemUI(this)
-
+       // showRadioGroupDialog()
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         }
@@ -205,4 +207,15 @@ class Activity_Foulder : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 or View.SYSTEM_UI_FLAG_IMMERSIVE)
     }
+//    fun showRadioGroupDialog() {
+//        // Inflate the custom layout
+//        val dialogView = layoutInflater.inflate(R.layout.dialog_radio_group, null)
+//
+//        // Create the AlertDialog
+//        val alertDialog = AlertDialog.Builder(this).setView(dialogView).create()
+//
+//        // Show the AlertDialog
+//        alertDialog.show()
+//    }
+
 }
