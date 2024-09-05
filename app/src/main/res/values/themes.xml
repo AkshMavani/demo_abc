@@ -20,6 +20,9 @@
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">@color/white</item>
     </style>
+    <style name="BlurView" >
+
+    </style>
 
     
 </resources>
