@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:paddingTop="@dimen/_10sdp"
+    android:paddingBottom="@dimen/_10sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/img_share"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/ic_share"
+        android:layout_marginStart="@dimen/_10sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/black"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:id="@+id/tv_count_itemSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:text="selected_items"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/img_delete"
+        app:layout_constraintStart_toEndOf="@+id/img_share"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/img_delete"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:layout_width="@dimen/_22ssp"
+        android:layout_height="22sp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:src="@drawable/icon_delete"
+        android:layout_marginEnd="@dimen/_11sdp"
+        app:layout_constraintEnd_toStartOf="@+id/img_more"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/img_more"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        android:layout_width="@dimen/_14sdp"
+        android:layout_height="@dimen/_22ssp"
+        android:src="@drawable/ic_menu"
+        android:layout_marginEnd="@dimen/_11sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

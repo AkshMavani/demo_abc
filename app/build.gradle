@@ -93,4 +93,11 @@ dependencies {
 
 
     //implementation 'com.github.a914-gowtham:android-video-trimmer:x.y.z'
+
+
+    def nav_version = "2.3.5"
+
+// Navigation Component
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 }

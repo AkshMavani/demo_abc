@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/ic_photo"
+        android:id="@+id/navigation_home"
+        android:title="text_library"
+        app:showAsAction="always"/>
+    <item
+        android:icon="@drawable/ic_cho_ban"
+        android:id="@+id/navigation_dashboard"
+        android:title="text_for_you"
+        app:showAsAction="always"/>
+    <item
+        android:icon="@drawable/ic_album"
+        android:id="@+id/navigation_general_iamge"
+        android:title="text_album"
+        app:showAsAction="always"/>
+    <item
+        android:icon="@drawable/selector_settings_theme_dark"
+        android:id="@+id/navigation_setting"
+        android:title="title_setting"
+        app:showAsAction="always"/>
+</menu>
