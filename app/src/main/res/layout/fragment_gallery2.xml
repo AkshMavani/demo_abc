@@ -184,14 +184,14 @@
                             android:backgroundTint="@android:color/transparent"
                             app:tabGravity="center"
                             app:tabIndicator="@drawable/bg_item_tl_theme_dark"
-                            app:tabIndicatorColor="@color/black"
+
                             app:tabIndicatorFullWidth="true"
                             app:tabIndicatorHeight="@dimen/_30sdp"
                             app:tabMaxWidth="0dp"
                             app:tabMode="scrollable"
                             app:tabRippleColor="@android:color/transparent"
-                            app:tabSelectedTextColor="@color/black"
-                            app:tabTextAppearance="@color/black"
+
+                            app:tabTextAppearance="@style/TextTabLayoutCategory"
                             app:tabTextColor="@color/white"/>
                     </RelativeLayout>
                 </com.blurview.BlurView>

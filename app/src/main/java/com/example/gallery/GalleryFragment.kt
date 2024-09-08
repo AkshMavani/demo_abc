@@ -1,11 +1,46 @@
 package com.example.gallery
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.PendingIntent
+import android.content.ContentUris
+import android.content.Intent
+import android.content.IntentSender
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.demo_full.R
+import com.example.demo_full.databinding.FragmentGallery2Binding
+import com.example.gallery.ui.MediaAdapter
+import com.example.gallery.ui.MediaRepository
+import com.example.gallery.ui.MediaViewModel
+import com.example.gallery.ui.MediaViewModelFactory
+import com.example.gallery.ui.adapter.DayAdapter
+import com.example.gallery.ui.adapter.MonthAdapter
+import com.example.gallery.ui.adapter.YearAdapter
+import com.example.gallery.ui.model.GalleryModel
+import com.example.gallery.util.StickyHeaderGridLayoutManager
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import java.io.File
+import java.io.Serializable
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,6 +53,23 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class GalleryFragment : Fragment() {
+    var MODE_EDIT = 0
+    var MODE_SELECT = 1
+    lateinit var deleteLauncher: ActivityResultLauncher<Intent>
+    lateinit var _binding: FragmentGallery2Binding
+    var defaultMode: Int = MODE_SELECT
+    lateinit var mAdapter: MediaAdapter
+    lateinit var dayAdapter:DayAdapter
+
+    //var mGalleryYearModels: ArrayList<GalleryModel> = ArrayList()
+     var arr:ArrayList<GalleryModel> = ArrayList()
+    var newArratList:ArrayList<String> = ArrayList()
+    var newArratListIndex:ArrayList<Int> = ArrayList()
+    var mGalleryDayModels: List<List<GalleryModel>?> = java.util.ArrayList()
+    var mGalleryMonthModels: List<List<GalleryModel>?> = java.util.ArrayList()
+    var mGalleryYearModels: List<GalleryModel?> = java.util.ArrayList()
+    private val mediaViewModel: MediaViewModel by viewModels { MediaViewModelFactory(MediaRepository(requireContext())) }
+    private val binding get() = _binding!!
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -30,12 +82,155 @@ class GalleryFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery2, container, false)
+        _binding = FragmentGallery2Binding.inflate(inflater, container, false)
+        deleteLauncher = registerForActivityResult<Intent, ActivityResult>(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.e("TAG", "onCreateView:deelte success ")
+                val data=mAdapter.selectItems()
+                Log.e("DATA123", ":>>>>>>####$data ")
+//                Log.e("DATA123", ":>>>>>>####$selectedData ", )
+//                for (i in selectedData){
+//                    Log.e("DATA123", "onCreateView:>>>>>>####$data ", )
+//                    Log.e("DATA123", "onCreateView:>>>>>>####$i ", )
+//                    data.removeAt(i)
+//                    Log.e("DATA123", "onCreateView:>>>>>>####$data ", )
+//                    mAdapter.notifyDataSetChanged()
+//
+//                }
+
+                // Handle successful deletion
+                // Optionally, show a toast or update your UI
+            }
+        }
+
+        val layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.rcvMedia.layoutManager = layoutManager
+//        mediaViewModel.mediaItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
+//            Log.e("MediaItems", "onCreateView:>>>>>$mediaItems ")
+//          val mediaAdapter =  MediaAdapter(requireContext(), mediaItems)
+//            binding.rcvMedia.adapter=mediaAdapter
+//        })
+
+
+        binding.tabMode.addTab(binding.tabMode.newTab().setText(getText(R.string.year)))
+        binding.tabMode.addTab(binding.tabMode.newTab().setText(getText(R.string.month)))
+        binding.tabMode.addTab(binding.tabMode.newTab().setText(getText(R.string.day)))
+        binding.tabMode.addTab(binding.tabMode.newTab().setText(getText(R.string.all_media)))
+        binding.tabMode.selectTab(binding.tabMode.getTabAt(3))
+        binding.tabMode.isSmoothScrollingEnabled = true
+        mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
+            Log.e("Gallery", "onCreateView:>>>>>$mediaItems ")
+
+            year(mediaItems)
+            month(mediaItems)
+            loadDataDay(mediaItems)
+            getAllImages(mediaItems)
+        })
+
+        binding.btnSelect.setOnClickListener {
+            if (defaultMode == MODE_SELECT) {
+                defaultMode = MODE_EDIT
+                (activity as? MainActivity11)?.displayDelete()
+                (activity as? MainActivity11)?.navView?.visibility = View.GONE
+                (activity as? MainActivity11)?.view?.findViewById<ImageView>(R.id.img_share)!!.setOnClickListener {
+                    Log.e("TAG_SELECted", "click: ")
+                   val data= mAdapter.getSelectedImagePaths()
+                    shareMultipleImages(data)
+                }
+                (activity as? MainActivity11)?.view?.findViewById<ImageView>(R.id.img_delete)!!.setOnClickListener {
+                    val data= mAdapter.getSelectedImagePaths()
+                    var share= mAdapter.selectItems()
+//                    share=newArratListIndex
+//                    data=newArratList
+                    deleteMultipleMedia(data)
+
+
+
+
+                }
+                binding.cardview.visibility = View.INVISIBLE
+                binding.btnSelect.text = getString(R.string.cancel)
+
+                if (binding.tabMode.selectedTabPosition != 2) {
+                    if (binding.tabMode.selectedTabPosition == 3 && mAdapter != null) {
+                       // mAdapter?.setChoose(true)
+                        mAdapter.toggleSelectMode()
+                        mAdapter?.notifyDataSetChanged()
+                    }
+                } else {
+                    dayAdapter?.setChoose(true)
+                    dayAdapter?.notifyDataSetChanged()
+                }
+            } else if (defaultMode == MODE_EDIT) {
+                defaultMode = MODE_SELECT
+                (activity as? MainActivity11)?.hideDelete()
+                (activity as? MainActivity11)?.navView?.visibility = View.VISIBLE
+                binding.cardview.visibility = View.VISIBLE
+                binding.btnSelect.text = getString(R.string.select_text)
+
+                if (mAdapter != null) {
+                    if (binding.tabMode.selectedTabPosition != 2) {
+                        if (binding.tabMode.selectedTabPosition == 3) {
+                            mAdapter.toggleSelectMode()
+                            //FIleUtils.formatListgallery(mGalleryModels)
+                            mAdapter?.notifyDataSetChanged()
+                        }
+                    } else {
+                        dayAdapter?.setChoose(true)
+                        dayAdapter?.notifyDataSetChanged()
+                    }
+                }
+            }
+
+        }
+
+
+        binding.tabMode.setOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab!!.position==0){
+
+                    binding.rcvYear.visibility=View.VISIBLE
+                    binding.rcvMonth.visibility=View.GONE
+                    binding.rcvDay.visibility=View.GONE
+                    binding.rcvMedia.visibility=View.GONE
+                } else if (tab.position==1){
+
+                    binding.rcvYear.visibility=View.GONE
+                    binding.rcvMonth.visibility=View.VISIBLE
+                    binding.rcvDay.visibility=View.GONE
+                    binding.rcvMedia.visibility=View.GONE
+                } else if (tab.position==2){
+
+                    binding.rcvYear.visibility=View.GONE
+                    binding.rcvMonth.visibility=View.GONE
+                    binding.rcvDay.visibility=View.VISIBLE
+                    binding.rcvMedia.visibility=View.GONE
+                } else if (tab.position==3){
+                    binding.rcvYear.visibility=View.GONE
+                    binding.rcvMonth.visibility=View.GONE
+                    binding.rcvDay.visibility=View.GONE
+                    binding.rcvMedia.visibility=View.VISIBLE
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+        })
+
+
+        return binding.root
     }
 
     companion object {
@@ -57,4 +252,534 @@ class GalleryFragment : Fragment() {
                 }
             }
     }
+
+
+
+    fun getListImageByDay(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
+        val result = mutableListOf<List<GalleryModel>>()
+        val dayList = mutableListOf<GalleryModel>()
+        mGalleryDayModels = listOf(dayList)
+        if (!galleryModels.isNullOrEmpty()) {
+            var currentDay = galleryModels[0].days
+            for (model in galleryModels) {
+                if (model.path != null) {
+                    if (model.days == currentDay) {
+                        dayList.add(model)
+                    } else {
+                        currentDay = model.days
+                        result.add(dayList.reversed())
+                        dayList.clear()
+                        dayList.add(model)
+                    }
+                }
+            }
+            if (dayList.isNotEmpty()) {
+                result.add(dayList.reversed())
+            }
+        }
+
+        return result
+    }
+//    fun getListImageByMonth(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
+//        val result = mutableListOf<List<GalleryModel>>()
+//        val monthList = mutableListOf<GalleryModel>()
+//        result.clear()
+//        monthList.clear()
+//        if (!galleryModels.isNullOrEmpty()) {
+//            var currentDay = galleryModels[0].days
+//            var currentMonth = galleryModels[0].month
+//            var currentYear = galleryModels[0].year
+//
+//            monthList.add(galleryModels[0])
+//            for (model in galleryModels) {
+//                if (model.path != null) {
+//                    if (model.days != currentDay) {
+//                        currentDay = model.days
+//                        monthList.add(galleryModels[galleryModels.indexOf(model) - 1])
+//                    }
+//                    if (model.month != currentMonth || model.year != currentYear) {
+//                        currentMonth = model.month
+//                        currentYear = model.year
+//                        result.add(monthList)
+//                        monthList.clear()
+//                    }
+//                }
+//            }
+//            monthList.add(galleryModels.last())
+//            result.add(monthList)
+//        }
+//        return result
+//    }
+        fun getListImageByMonth(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
+            val arrayList = ArrayList<List<GalleryModel>>()
+            var arrayList2 = ArrayList<GalleryModel>()
+
+            if (galleryModels != null && galleryModels.isNotEmpty()) {
+                var days = galleryModels[0].days
+                var month = galleryModels[0].month
+                var year = galleryModels[0].year
+                arrayList2.add(galleryModels[0])
+
+                for (i in galleryModels.indices) {
+                    if (galleryModels[i].path != null) {
+                        if (galleryModels[i].days != days) {
+                            days = galleryModels[i].days
+                            arrayList2.add(galleryModels[i - 1])
+                        }
+                        if (galleryModels[i].month != month || galleryModels[i].year != year) {
+                            month = galleryModels[i].month
+                            year = galleryModels[i].year
+                            arrayList.add(arrayList2)
+                            arrayList2 = ArrayList()
+                        }
+                    }
+                }
+                arrayList2.add(galleryModels[galleryModels.size - 1])
+                arrayList.add(arrayList2)
+            }
+
+            return arrayList
+        }
+
+
+
+    fun getListImageByYear(galleryModels: List<GalleryModel>?): List<GalleryModel> {
+        val result = mutableListOf<GalleryModel>()
+
+        if (!galleryModels.isNullOrEmpty()) {
+            var currentYear = galleryModels[0].year
+
+            for (model in galleryModels) {
+                if (model.path != null) {
+                    if (model.year != currentYear) {
+                        currentYear = model.year
+                        result.add(galleryModels[galleryModels.indexOf(model) - 1])
+                    }
+                    if (galleryModels.indexOf(model) == galleryModels.size - 1) {
+                        result.add(model)
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+
+    fun month(mediaItems:List<GalleryModel>){
+
+        val month=getListImageByMonth(mediaItems)
+        Log.e("MPNTH1", "month: >>$month")
+        Log.e("MPNTH1", "month: >>$mediaItems")
+        this.mGalleryMonthModels = month
+
+        if (month.size > 0) {
+            val monthAdapter = MonthAdapter(context, month, object : MonthAdapter.OnClickCustom {
+                override fun onCLick1(galleryModel: GalleryModel?) {
+//                        this@GalleryFragment.m251xcc14c062(galleryModel)
+                    selectmonth(galleryModel!!)
+                }
+            })
+            binding.rcvMonth.adapter = monthAdapter
+            val stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(1)
+            stickyHeaderGridLayoutManager.setHeaderBottomOverlapMargin(
+                resources.getDimensionPixelSize(
+                    R.dimen._10sdp
+                )
+            )
+            binding.rcvMonth.layoutManager = stickyHeaderGridLayoutManager
+            stickyHeaderGridLayoutManager.scrollToPosition(monthAdapter.getItemCount() - 1)
+        }
+    }
+    fun year(mediaItems:List<GalleryModel>){
+        val year=getListImageByYear(mediaItems)
+        mGalleryYearModels = year
+        if (year.size > 0) {
+            mGalleryYearModels = year as ArrayList<GalleryModel>
+            binding.rcvYear.adapter = YearAdapter(activity, year as ArrayList<GalleryModel>?, object : YearAdapter.OnClickCuston {
+                override fun onCLick1(galleryModel: GalleryModel) {
+                    binding.tabMode.selectTab(binding.tabMode.getTabAt(1))
+
+                    var i = 0
+                    for (i2 in mGalleryMonthModels.indices) {
+                        i += mGalleryMonthModels[i2]!!.size
+                        for (i3 in mGalleryMonthModels[i2]!!.indices) {
+                            if (galleryModel.datetaken == mGalleryMonthModels[i2]!![i3].datetaken) {
+                               mGalleryMonthModels[i2]!![i3]
+                                binding.rcvMonth.layoutManager?.scrollToPosition(i + i2)
+                            }
+                        }
+                    }
+
+                }
+            })
+            val linearLayoutManager = LinearLayoutManager(context)
+            binding.rcvYear.layoutManager = linearLayoutManager
+            //linearLayoutManager.scrollToPosition(r0.getItemCount() - 1)
+        }
+    }
+
+    fun loadDataDay(mediaItems:List<GalleryModel>) {
+        if (binding.rcvDay.adapter != null) {
+            return
+        }
+        val listImageByDay: List<List<GalleryModel>> = getListImageByDay(mediaItems)
+        mGalleryDayModels = listImageByDay
+        //this.mGalleryDayModels = listImageByDay
+        if (listImageByDay.size == 0) {
+            return
+        }
+        dayAdapter = DayAdapter(
+            context,
+            listImageByDay,
+            object : DayAdapter.OnClickCustom {
+
+                override fun onCLick1(view: View?, galleryModel: GalleryModel?, position: Int) {
+                    m250x4bc8bbfd(view!!, galleryModel!!,position)
+                }
+            })
+        binding.rcvDay.adapter = dayAdapter
+        val stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(3)
+        stickyHeaderGridLayoutManager.spanSizeLookup = object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(section: Int, position: Int): Int {
+                return if (position == 1 || position == 2 || position == 3) 1 else 3
+            }
+        }
+        stickyHeaderGridLayoutManager.setHeaderBottomOverlapMargin(
+            resources.getDimensionPixelSize(
+                R.dimen._10sdp
+            )
+        )
+        binding.rcvDay.layoutManager = stickyHeaderGridLayoutManager
+        stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.getItemCount() - 1)
+    }
+    fun getAllImages(mediaItems: List<GalleryModel>){
+         mAdapter =  MediaAdapter(requireContext(), mediaItems)
+            binding.rcvMedia.adapter=mAdapter
+    }
+    fun selectmonth(galleryModel: GalleryModel) {
+        binding.tabMode.selectTab(binding.tabMode.getTabAt(2))
+
+        var i = 0
+        for (i2 in mGalleryDayModels.indices) {
+            i += if (mGalleryDayModels[i2]!!.size >= 4) 4 else 1
+
+            for (i3 in mGalleryDayModels[i2]!!.indices) {
+                if (galleryModel.datetaken == mGalleryDayModels[i2]!![i3].datetaken) {
+                    mGalleryDayModels[i2]!![i3]
+                    binding.rcvDay.layoutManager?.scrollToPosition((i + i2) - 1)
+                }
+            }
+        }
+    }
+
+    fun shareMultipleImages(imageUrls: List<String?>) {
+        val imageUris = ArrayList<Uri>()
+        for (imageUrl in imageUrls) {
+            val imageFile = File(imageUrl)
+            var imageUri: Uri
+            imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + ".provider", imageFile)
+            } else {
+                Uri.fromFile(imageFile)
+            }
+            imageUris.add(imageUri)
+        }
+
+        // Create an Intent to share multiple images
+        val shareIntent = Intent(Intent.ACTION_SEND_MULTIPLE)
+        shareIntent.type = "image/*"
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris)
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        requireContext().startActivity(Intent.createChooser(shareIntent, "Share Images"))
+    }
+
+
+//    fun deleteMultipleImages(imageUrls: List<String?>) {
+//        val urisToDelete: MutableList<Uri> = ArrayList()
+//        for (imageUrl in imageUrls) {
+//            val imageFile = File(imageUrl)
+//            var imageUri: Uri?
+//            imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                // For Android 7.0 and above, use FileProvider
+//                FileProvider.getUriForFile(
+//                    requireContext(),    requireContext().getApplicationContext().getPackageName() + ".provider",
+//                    imageFile
+//                )
+//            } else {
+//                // For Android below 7.0, directly use the Uri from the file path
+//                Uri.fromFile(imageFile)
+//            }
+//
+//            // Find the content Uri for the image
+//            val contentUri = getContentUri(imageFile)
+//            if (contentUri != null) {
+//                urisToDelete.add(contentUri)
+//            }
+//        }
+//
+////        // Create delete request for MediaStore
+////        if (!urisToDelete.isEmpty()) {
+////
+////            val deleteIntent:Intent = MediaStore.createDeleteRequest(requireContext().contentResolver, urisToDelete)
+////            deleteLauncher.launch(deleteIntent)
+////        }
+//
+//        if (urisToDelete.isNotEmpty()) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                // For Android 11 and above
+//                val deletePendingIntent: PendingIntent =
+//                    MediaStore.createDeleteRequest(requireContext().contentResolver, urisToDelete)
+//
+//                try {
+//                    startIntentSenderForResult(
+//                        deletePendingIntent.intentSender,
+//                        101, // Request code for identifying this action
+//                        null,
+//                        0,
+//                        0,
+//                        0,
+//                        null
+//                    )
+//                } catch (e: IntentSender.SendIntentException) {
+//                    e.printStackTrace()
+//                }
+//            }
+//        }
+//    }
+//
+//    // Helper function to get the MediaStore content Uri
+//    private fun getContentUri(imageFile: File): Uri? {
+//        val filePath = imageFile.absolutePath
+//        var contentUri: Uri? = null
+//        val projection = arrayOf(MediaStore.Images.Media._ID)
+//        val selection = MediaStore.Images.Media.DATA + "=?"
+//        val selectionArgs = arrayOf(filePath)
+//       context?.getContentResolver()?.query(
+//           MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//           projection, selection, selectionArgs, null
+//       ).use { cursor ->
+//            if (cursor != null && cursor.moveToFirst()) {
+//                val id: Int =
+//                    cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+//                contentUri = ContentUris.withAppendedId(
+//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                    id.toLong()
+//                )
+//            }
+//        }
+//        return contentUri
+//    }
+
+
+    fun deleteMultipleMedia(mediaUrls: List<String?>) {
+        val urisToDelete: MutableList<Uri> = ArrayList()
+        for (mediaUrl in mediaUrls) {
+            val mediaFile = File(mediaUrl)
+            var mediaUri: Uri?
+            mediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                // For Android 7.0 and above, use FileProvider
+                FileProvider.getUriForFile(
+                    requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider",
+                    mediaFile
+                )
+            } else {
+                // For Android below 7.0, directly use the Uri from the file path
+                Uri.fromFile(mediaFile)
+            }
+
+            // Find the content Uri for the media
+            val contentUri = getContentUri(mediaFile)
+            if (contentUri != null) {
+                urisToDelete.add(contentUri)
+            }
+        }
+
+        if (urisToDelete.isNotEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // For Android 11 and above
+                val deletePendingIntent: PendingIntent =
+                    MediaStore.createDeleteRequest(requireContext().contentResolver, urisToDelete)
+
+                try {
+                    startIntentSenderForResult(
+                        deletePendingIntent.intentSender,
+                        101, // Request code for identifying this action
+                        null,
+                        0,
+                        0,
+                        0,
+                        null
+                    )
+                } catch (e: IntentSender.SendIntentException) {
+                    e.printStackTrace()
+                }
+            } else {
+                // For Android below 11
+                for (uri in urisToDelete) {
+                    requireContext().contentResolver.delete(uri, null, null)
+                }
+            }
+        }
+    }
+
+    // Helper function to get the MediaStore content Uri
+    private fun getContentUri(mediaFile: File): Uri? {
+        val filePath = mediaFile.absolutePath
+        var contentUri: Uri? = null
+        val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Video.Media._ID
+        )
+        val selection = "${MediaStore.Images.Media.DATA}=? OR ${MediaStore.Video.Media.DATA}=?"
+        val selectionArgs = arrayOf(filePath, filePath)
+        context?.getContentResolver()?.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, null
+        ).use { cursor ->
+            if (cursor != null && cursor.moveToFirst()) {
+                val id: Int =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id.toLong()
+                )
+            } else {
+                context?.getContentResolver()?.query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection, selection, selectionArgs, null
+                ).use { cursor ->
+                    if (cursor != null && cursor.moveToFirst()) {
+                        val id: Int =
+                            cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID))
+                        contentUri = ContentUris.withAppendedId(
+                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                            id.toLong()
+                        )
+                    }
+                }
+            }
+        }
+        return contentUri
+    }
+
+
+//    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel, position: Int) {
+//        var selectedPosition = position
+//        Log.e("Selectedpos", "m250x4bc8bbfd: ")
+//
+//        mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
+//            for (i in mediaItems.indices) {
+//                if (mediaItems[i].path == galleryModel.path) {
+//                    selectedPosition = i
+//                }
+//            }
+//
+//            val imageView = view as ImageView
+//            val locationOnScreen = IntArray(2)
+//
+//            imageView.getLocationOnScreen(locationOnScreen)
+//            val myFragment: Fragment = DetailImageFragment()
+//
+//            fragmentManager?.beginTransaction()
+//                ?.setReorderingAllowed(true)
+//                ?.replace(
+//                    R.id.container_gallery,
+//                    DetailImageFragment.newInstances(
+//                        locationOnScreen,
+//                        imageView.width,
+//                        imageView.height
+//                    )!!
+//                )
+//                ?.addToBackStack(null) // Optional: for back navigation
+//                ?.commit()
+//
+//
+//
+//
+//
+//
+//
+//            activity?.overridePendingTransition(0, 0)
+//        })
+//
+//        // baseAdsPopupActivity.showPopupAdsCreateView(activity?.findViewById(R.id.home_main))
+//    }
+
+//    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel, position: Int) {
+//        var selectedPosition = position
+//        Log.e("Selectedpos", "m250x4bc8bbfd: ")
+//
+//        mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
+//            for (i in mediaItems.indices) {
+//                if (mediaItems[i].path == galleryModel.path) {
+//                    selectedPosition = i
+//                }
+//            }
+//
+//            val imageView = view as ImageView
+//            val locationOnScreen = IntArray(2)
+//            imageView.getLocationOnScreen(locationOnScreen)
+//
+////            val fragmentManager = requireActivity().supportFragmentManager
+////            val currentFragment = fragmentManager.findFragmentById(R.id.container_gallery)
+////
+////            // Manually remove the current fragment before replacing it
+////            currentFragment?.let {
+////              //  fragmentManager.beginTransaction().remove(it).commit()
+////                fragmentManager.popBackStack()
+////            }
+////
+////            fragmentManager.beginTransaction()
+////
+////                .replace(
+////                    R.id.container_gallery,
+////                    DetailImageFragment.newInstances(
+////                        locationOnScreen,
+////                        imageView.width,
+////                        imageView.height
+////                    )!!
+////                )
+////                .addToBackStack(null) // Add to back stack for navigation
+////                .commit()
+////
+////            activity?.overridePendingTransition(0, 0)
+////            fragmentManager.popBackStack()
+//            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+//            navController.navigate(R.id.navigation_detail_iamge)
+//
+//
+//        })
+//
+//    }
+
+
+    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel, position: Int) {
+        var selectedPosition = position
+
+
+
+//            val imageView = view as ImageView
+//            val locationOnScreen = IntArray(2)
+//            imageView.getLocationOnScreen(locationOnScreen)
+//
+//            // Create a bundle to pass data
+//            val bundle = Bundle().apply {
+//                putIntArray("locationOnScreen", locationOnScreen)
+//                putInt("position",position)
+//                putString("imagePath", galleryModel.path)
+//            }
+//
+//            // Navigate to the DetailImageFragment and pass the bundle
+//            val navController = Navigation.findNavController(requireActivity(), R.id.container_gallery)
+//            navController.navigate(R.id.navigation_detail_iamge, bundle)
+            val intent=Intent(requireContext(),ActivityImageDetail::class.java)
+            intent.putExtra("image",galleryModel.path)
+            intent.putExtra("position",position)
+            startActivity(intent)
+      //  })
+    }
+
+
+
+
 }

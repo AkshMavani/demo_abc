@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <!-- ImageView for displaying media -->
+    <ImageView
+        android:id="@+id/mediaImageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_120sdp"
+        android:scaleType="centerCrop" />
+
+    <!-- Circular selection indicator -->
+    <ImageView
+        android:id="@+id/circleView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:background="@drawable/round_circle"
+        android:visibility="gone" />
+
+    <!-- Tick mark for selection -->
+    <ImageView
+        android:id="@+id/tickMark"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_tick_boder_white"
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="@dimen/_35sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/img_video"
+        android:visibility="gone"
+        android:layout_height="@dimen/_35sdp"
+        android:src="@drawable/baseline_slow_motion_video_24" />
+</RelativeLayout>

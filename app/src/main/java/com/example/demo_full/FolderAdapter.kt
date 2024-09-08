@@ -1,7 +1,6 @@
 package com.example.demo_full
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +33,8 @@ interface foulder_click{
     fun click(name:String)
 }
 
-class FolderAdapter(private val mList: List<Pair<String, String>>, private val context: Context,var foulderClick: foulder_click) : RecyclerView.Adapter<FolderAdapter.ViewHolder>() {
+class FolderAdapter(private val mList: List<Triple<String, String, Long>>, private val context: Context,
+                    var foulderClick: foulder_click) : RecyclerView.Adapter<FolderAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

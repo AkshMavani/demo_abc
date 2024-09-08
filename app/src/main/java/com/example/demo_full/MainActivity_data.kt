@@ -64,6 +64,7 @@ class MainActivity_data : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // Retry the rename operation
@@ -103,6 +104,7 @@ class MainActivity_data : AppCompatActivity() {
         val imageList = intent.getStringArrayListExtra("imgList") as ArrayList<Model_Img>
         val clickImg = object : click_img {
             override fun click(img: Model_Img) {
+                Log.e("TAG_DATA223", "click: >>>>>>>>>>>>> ${adapter.set_type()}", )
                 click=!click
                 if (click){
                     binding.cl.visibility=View.GONE
@@ -148,6 +150,7 @@ class MainActivity_data : AppCompatActivity() {
 
             }
         }
+
         binding.buttonRename.setOnClickListener {
             val img = imageList[binding.recyclerView.currentItem]
             Log.e("TAG_54", "onCreate:>>$img ")
@@ -213,11 +216,16 @@ class MainActivity_data : AppCompatActivity() {
         }
 
         adapter = ImagePagerAdapter_DTA(this, imageList, clickImg)
+        val currentType = adapter.set_type()
+
+        Log.e("TYPE", "currentType:>>$currentType ", )
+        Log.e("TYPE", "currentType:>>${adapter.str_type} ", )
         Log.e("TAG123", "onCreate: >>POs$position")
         Log.e("TAG123", "onCreate: >>POs$imageList")
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setCurrentItem(position, false)
+
     }
 
     private fun deleteFileWithConfirmation(fileUri: Uri, isVideo: Boolean) {

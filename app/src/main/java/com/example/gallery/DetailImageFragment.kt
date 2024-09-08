@@ -1,10 +1,10 @@
 package com.example.gallery
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.demo_full.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,5 +56,21 @@ class DetailImageFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+        fun newInstances(
+            screenLocation: IntArray?,
+            widget: Int,
+            height: Int,
+        ): DetailImageFragment? {
+            val bundle = Bundle()
+            bundle.putInt("widget", widget)
+            bundle.putInt("height", height)
+            bundle.putIntArray("screenLocation", screenLocation)
+            val detailImageFragment = DetailImageFragment()
+            detailImageFragment.arguments = bundle
+            return detailImageFragment
+        }
+
     }
+
+
 }

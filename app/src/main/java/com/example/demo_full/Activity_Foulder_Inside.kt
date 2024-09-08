@@ -40,11 +40,57 @@ class MainActivity4 : AppCompatActivity(),Click_image {
         imageRecyclerView.adapter = imageAdapter
     }
 
+//    fun getMediaInFolder(context: Context, folderName: String): List<Model_Img> {
+//        val mediaList = mutableListOf<Model_Img>()
+//
+//        // Query images
+//        val imageProjection = arrayOf(MediaStore.Images.Media.DATA)
+//        val selection = "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?"
+//        val selectionArgs = arrayOf(folderName)
+//        val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
+//
+//        val imageCursor = context.contentResolver.query(
+//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            imageProjection,
+//            selection,
+//            selectionArgs,
+//            sortOrder
+//        )
+//        imageCursor?.use {
+//            val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//            while (it.moveToNext()) {
+//                val imagePath = it.getString(imagePathColumn)
+//                mediaList.add(Model_Img(imagePath,"IMG"))
+//            }
+//        }
+//        val videoProjection = arrayOf(MediaStore.Video.Media.DATA)
+//        val videoCursor = context.contentResolver.query(
+//            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+//            videoProjection,
+//            selection,
+//            selectionArgs,
+//            sortOrder
+//        )
+//
+//        videoCursor?.use {
+//            val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+//            while (it.moveToNext()) {
+//                val videoPath = it.getString(videoPathColumn)
+//                mediaList.add(Model_Img(videoPath,"VIDEO"))
+//            }
+//        }
+//
+//        return mediaList
+//    }
+
     fun getMediaInFolder(context: Context, folderName: String): List<Model_Img> {
-        val mediaList = mutableListOf<Model_Img>()
+        val mediaList = ArrayList<Model_Img>()
 
         // Query images
-        val imageProjection = arrayOf(MediaStore.Images.Media.DATA)
+        val imageProjection = arrayOf(
+            MediaStore.Images.Media.DATA,              // File path
+            MediaStore.Images.Media.DATE_TAKEN         // Date taken
+        )
         val selection = "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?"
         val selectionArgs = arrayOf(folderName)
         val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
@@ -56,14 +102,24 @@ class MainActivity4 : AppCompatActivity(),Click_image {
             selectionArgs,
             sortOrder
         )
+
         imageCursor?.use {
             val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+
             while (it.moveToNext()) {
                 val imagePath = it.getString(imagePathColumn)
-                mediaList.add(Model_Img(imagePath,"IMG"))
+                val dateTaken = it.getLong(dateTakenColumn) // Get date taken for the image
+                mediaList.add(Model_Img(imagePath, "IMG", dateTaken))
             }
         }
-        val videoProjection = arrayOf(MediaStore.Video.Media.DATA)
+
+        // Query videos
+        val videoProjection = arrayOf(
+            MediaStore.Video.Media.DATA,              // File path
+            MediaStore.Video.Media.DATE_TAKEN         // Date taken
+        )
+
         val videoCursor = context.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             videoProjection,
@@ -74,14 +130,18 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
         videoCursor?.use {
             val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+            val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
+
             while (it.moveToNext()) {
                 val videoPath = it.getString(videoPathColumn)
-                mediaList.add(Model_Img(videoPath,"VIDEO"))
+                val dateTaken = it.getLong(dateTakenColumn) // Get date taken for the video
+                mediaList.add(Model_Img(videoPath, "VIDEO", dateTaken))
             }
         }
 
         return mediaList
     }
+
 
     @SuppressLint("SuspiciousIndentation")
     override fun click(modelImg: Model_Img) {

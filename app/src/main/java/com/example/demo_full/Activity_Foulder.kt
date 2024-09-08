@@ -1,23 +1,18 @@
 package com.example.demo_full
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -137,14 +132,85 @@ class Activity_Foulder : AppCompatActivity() {
         }
     }
 
-    fun getMediaFolders(context: Context): List<Pair<String, String>> {
-        val folders = mutableListOf<Pair<String, String>>()
-        val seenFolders = mutableSetOf<String>()
-        var moviesFolder: Pair<String, String>? = null
+//    fun getMediaFolders(context: Context): List<Pair<String, String>> {
+//        val folders = mutableListOf<Pair<String, String>>()
+//        val seenFolders = mutableSetOf<String>()
+//        var moviesFolder: Pair<String, String>? = null
+//
+//        val imageProjection = arrayOf(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA)
+//        val videoProjection = arrayOf(MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA)
+//        val sortOrder = "${MediaStore.MediaColumns.DATE_TAKEN} DESC"
+//
+//        // Query for images
+//        val imageCursor = context.contentResolver.query(
+//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            imageProjection,
+//            null,
+//            null,
+//            sortOrder
+//        )
+//
+//        imageCursor?.use {
+//            val folderNameColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+//            val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//
+//            while (it.moveToNext()) {
+//                val folderName = it.getString(folderNameColumn)
+//                val imagePath = it.getString(imagePathColumn)
+//
+//                if (!seenFolders.contains(folderName)) {
+//                    seenFolders.add(folderName)
+//                    if (folderName.equals("Movies", ignoreCase = true)) {
+//                        moviesFolder = Pair(folderName, imagePath)
+//                    } else {
+//                        folders.add(Pair(folderName, imagePath))
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Query for videos
+//        val videoCursor = context.contentResolver.query(
+//            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+//            videoProjection,
+//            null,
+//            null,
+//            sortOrder
+//        )
+//        videoCursor?.use {
+//            val folderNameColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
+//            val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+//
+//            while (it.moveToNext()) {
+//                val folderName = it.getString(folderNameColumn)
+//                val videoPath = it.getString(videoPathColumn)
+//
+//                if (!seenFolders.contains(folderName)) {
+//                    seenFolders.add(folderName)
+//                    folders.add(Pair(folderName, videoPath))
+//                }
+//            }
+//        }
+//
+//        return folders
+//    }
 
-        val imageProjection = arrayOf(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA)
-        val videoProjection = arrayOf(MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA)
-        val sortOrder = "${MediaStore.MediaColumns.DATE_TAKEN} DESC"
+    fun getMediaFolders(context: Context): List<Triple<String, String, Long>> {
+        val folders = mutableListOf<Triple<String, String, Long>>() // Using Triple to store folder name, path, and date taken
+        val seenFolders = mutableSetOf<String>()
+        var moviesFolder: Triple<String, String, Long>? = null
+
+        val imageProjection = arrayOf(
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME, // Folder name
+            MediaStore.Images.Media.DATA,                // File path
+            MediaStore.Images.Media.DATE_TAKEN           // Date taken
+        )
+        val videoProjection = arrayOf(
+            MediaStore.Video.Media.BUCKET_DISPLAY_NAME,  // Folder name
+            MediaStore.Video.Media.DATA,                 // File path
+            MediaStore.Video.Media.DATE_TAKEN            // Date taken
+        )
+        val sortOrder = "${MediaStore.MediaColumns.DATE_TAKEN} DESC" // Sort by Date Taken
 
         // Query for images
         val imageCursor = context.contentResolver.query(
@@ -158,17 +224,19 @@ class Activity_Foulder : AppCompatActivity() {
         imageCursor?.use {
             val folderNameColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
             val imagePathColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
 
             while (it.moveToNext()) {
                 val folderName = it.getString(folderNameColumn)
                 val imagePath = it.getString(imagePathColumn)
+                val dateTaken = it.getLong(dateTakenColumn) // Get the Date Taken value
 
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
                     if (folderName.equals("Movies", ignoreCase = true)) {
-                        moviesFolder = Pair(folderName, imagePath)
+                        moviesFolder = Triple(folderName, imagePath, dateTaken)
                     } else {
-                        folders.add(Pair(folderName, imagePath))
+                        folders.add(Triple(folderName, imagePath, dateTaken))
                     }
                 }
             }
@@ -182,23 +250,27 @@ class Activity_Foulder : AppCompatActivity() {
             null,
             sortOrder
         )
+
         videoCursor?.use {
             val folderNameColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
             val videoPathColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+            val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
 
             while (it.moveToNext()) {
                 val folderName = it.getString(folderNameColumn)
                 val videoPath = it.getString(videoPathColumn)
+                val dateTaken = it.getLong(dateTakenColumn) // Get the Date Taken value
 
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
-                    folders.add(Pair(folderName, videoPath))
+                    folders.add(Triple(folderName, videoPath, dateTaken))
                 }
             }
         }
 
         return folders
     }
+
 
     fun hideSystemUI(activity: Activity) {
         val decorView = activity.window.decorView

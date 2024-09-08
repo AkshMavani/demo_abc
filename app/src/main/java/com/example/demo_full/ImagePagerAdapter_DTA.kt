@@ -24,8 +24,8 @@ interface click_img{
     fun click(img:Model_Img)
 }
 
-class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls: ArrayList<Model_Img>,var clickImg1: click_img) :
-    RecyclerView.Adapter<ImagePagerAdapter_DTA.ImageViewHolder>() {
+class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls: ArrayList<Model_Img>,var clickImg1: click_img) : RecyclerView.Adapter<ImagePagerAdapter_DTA.ImageViewHolder>() {
+    var str_type:String?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.image_item_dta, parent, false)
         return ImageViewHolder(view)
@@ -34,6 +34,8 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageUrl = imageUrls[position]
         if (imageUrl.type.equals("IMG")){
+            str_type="IMG"
+            Log.e("TYPE", "onBindViewHolder:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>$str_type ", )
             holder.imageView.visibility=View.VISIBLE
            // holder.videoview.visibility=View.GONE
 
@@ -42,11 +44,12 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
                 .into(holder.imageView)
 
         }else{
+            str_type="VIDEO"
          //   holder.videoview.visibility=View.VISIBLE
             holder.imageView.visibility=View.GONE
             Log.e("BMP", "video: here", )
-            val task = GetVideoThumbnailTask(imageUrl.str, holder.imageView)
-            task.execute()
+//            val task = GetVideoThumbnailTask(imageUrl.str, holder.imageView)
+//            task.execute()
 //           holder.videoview.setVideoURI(imageUrl.str.toUri())
 //
 //            // Set MediaController to allow play, pause, forward, etc.
@@ -61,10 +64,10 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
 //                // Optionally, do something when video completes
 //            }
 //            holder.videoview.start()
-//            val intent=Intent(context,activity_video::class.java)
-//            intent.putExtra("VIDEO_URL",imageUrl.str)
-//            context.startActivity(intent)
-//            (context as Activity).finish()
+            val intent=Intent(context,activity_video::class.java)
+            intent.putExtra("VIDEO_URL",imageUrl.str)
+            context.startActivity(intent)
+            (context as Activity).finish()
 
 
 
@@ -106,6 +109,9 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
             }
         }
     }
-
+    fun set_type():String{
+        Log.e("TYPE", "recycleview:>>$str_type ", )
+        return str_type.toString()
+    }
 }
 
