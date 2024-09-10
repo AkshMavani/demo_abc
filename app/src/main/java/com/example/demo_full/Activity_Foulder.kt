@@ -62,7 +62,7 @@ class Activity_Foulder : AppCompatActivity() {
             }
         }
 
-        folderAdapter = FolderAdapter(getMediaFolders(this), this, click)
+        folderAdapter = FolderAdapter(  getMediaFolders(this), this, click)
         folderRecyclerView.adapter = folderAdapter
 
     }
@@ -227,9 +227,14 @@ class Activity_Foulder : AppCompatActivity() {
             val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
 
             while (it.moveToNext()) {
-                val folderName = it.getString(folderNameColumn)
+                var folderName = it.getString(folderNameColumn)
                 val imagePath = it.getString(imagePathColumn)
                 val dateTaken = it.getLong(dateTakenColumn) // Get the Date Taken value
+
+                // Fallback for missing or null folder names
+                if (folderName.isNullOrEmpty()) {
+                    folderName = "Unknown"
+                }
 
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
@@ -257,9 +262,14 @@ class Activity_Foulder : AppCompatActivity() {
             val dateTakenColumn = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
 
             while (it.moveToNext()) {
-                val folderName = it.getString(folderNameColumn)
+                var folderName = it.getString(folderNameColumn)
                 val videoPath = it.getString(videoPathColumn)
                 val dateTaken = it.getLong(dateTakenColumn) // Get the Date Taken value
+
+                // Fallback for missing or null folder names
+                if (folderName.isNullOrEmpty()) {
+                    folderName = "Unknown"
+                }
 
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
@@ -270,6 +280,7 @@ class Activity_Foulder : AppCompatActivity() {
 
         return folders
     }
+
 
 
     fun hideSystemUI(activity: Activity) {

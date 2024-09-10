@@ -47,7 +47,7 @@
             android:name="com.example.abc.splashscreen"
             android:exported="false" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.abc.Activity_Camera"
             android:exported="false" />
         <activity
             android:name="com.example.abc.MainActivity"
@@ -136,7 +136,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.example.abc.Activity_Camera"
+            android:name=".Activity_Foulder"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

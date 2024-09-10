@@ -36,6 +36,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.example.demo_full.databinding.ActivityMainDataBinding
 import java.io.File
 import java.io.FileInputStream
@@ -82,6 +83,13 @@ class MainActivity_data : AppCompatActivity() {
             pendingFilePath = null
             pendingNewName = null
         }
+        binding.recyclerView.offscreenPageLimit = 3 // Adjust the value as needed
+       binding.recyclerView.isUserInputEnabled = true
+       binding.recyclerView.setPageTransformer { page, position ->
+            // Apply your custom transformation here
+            // For example:
+            page.translationX = position * page.width
+        }
         intentSenderLauncher_move = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // After permission is granted, navigate to the folder activity
@@ -105,48 +113,7 @@ class MainActivity_data : AppCompatActivity() {
         val clickImg = object : click_img {
             override fun click(img: Model_Img) {
                 Log.e("TAG_DATA223", "click: >>>>>>>>>>>>> ${adapter.set_type()}", )
-                click=!click
-                if (click){
-                    binding.cl.visibility=View.GONE
-                    binding.ll12.visibility=View.GONE
-                }else{
-                    binding.cl.visibility=View.VISIBLE
-                    binding.ll12.visibility=View.VISIBLE
-                }
 
-                Log.e("PDF123", "click:>>>PDF#####${img.str}")
-                binding.buttonDelete.setOnClickListener {
-                    if (img.type == "IMG") {
-                        val imageUri = getImageContentUri(img.str)
-                        if (imageUri != null) {
-                            deleteFileWithConfirmation(imageUri, false)
-                        } else {
-                            Log.e("TAG", "Could not get content URI for the image")
-                        }
-                    } else {
-                        val imageUri = getVideoContentUri(img.str)
-                        if (imageUri != null) {
-                            deleteFileWithConfirmation(imageUri, true)
-                        } else {
-                            Log.e("TAG", "Could not get content URI for the video")
-                        }
-                    }
-                }
-                binding.buttonPdf.setOnClickListener {
-                    Log.e("TAG123dd", "click:>>>${img.str} ", )
-                    createPdfWithImage(img.str)
-//                    Log.e("PDF", "img:>>>$img")
-//                    val pdfUri = convertImageToPdf(img.str)
-//                    if (pdfUri != null) {
-//                        Log.e("PDF", "uri:$pdfUri")
-//                        openFileManagerForSaving(pdfUri)
-//                    } else {
-//                        Toast.makeText(this@MainActivity_data, "Failed to convert image to PDF", Toast.LENGTH_SHORT).show()
-//                    }
-                    //  FileUtil.initialize(intentSenderLauncher);
-
-
-                }
 
             }
         }
@@ -225,6 +192,56 @@ class MainActivity_data : AppCompatActivity() {
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setCurrentItem(position, false)
+        val currentImage = adapter.getImageAtPosition(position)
+        Log.e("CurrentImage", "Image Details (Programmatic): $currentImage")
+//        binding.txt.text=currentImage.str.toString()
+
+        binding.recyclerView.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.txt.text=adapter.getImageAtPosition(position).str.toString()
+                Log.e("CurrentImage", "Image Details: ${adapter.getImageAtPosition(position)}")
+
+
+
+                    binding.cl.visibility=View.VISIBLE
+                    binding.ll12.visibility=View.VISIBLE
+
+                Log.e("PDF123", "click:>>>PDF#####${adapter.getImageAtPosition(position).str}")
+                binding.buttonDelete.setOnClickListener {
+                    if (adapter.getImageAtPosition(position).type == "IMG") {
+                        val imageUri = getImageContentUri(adapter.getImageAtPosition(position).str)
+                        if (imageUri != null) {
+                            deleteFileWithConfirmation(imageUri, false)
+                        } else {
+                            Log.e("TAG", "Could not get content URI for the image")
+                        }
+                    } else {
+                        val imageUri = getVideoContentUri(adapter.getImageAtPosition(position).str)
+                        if (imageUri != null) {
+                            deleteFileWithConfirmation(imageUri, true)
+                        } else {
+                            Log.e("TAG", "Could not get content URI for the video")
+                        }
+                    }
+                }
+                binding.buttonPdf.setOnClickListener {
+                    Log.e("TAG123dd", "click:>>>${adapter.getImageAtPosition(position).str} ", )
+                    createPdfWithImage(adapter.getImageAtPosition(position).str)
+//                    Log.e("PDF", "img:>>>$img")
+//                    val pdfUri = convertImageToPdf(img.str)
+//                    if (pdfUri != null) {
+//                        Log.e("PDF", "uri:$pdfUri")
+//                        openFileManagerForSaving(pdfUri)
+//                    } else {
+//                        Toast.makeText(this@MainActivity_data, "Failed to convert image to PDF", Toast.LENGTH_SHORT).show()
+//                    }
+                    //  FileUtil.initialize(intentSenderLauncher);
+
+
+                }
+            }
+        })
 
     }
 

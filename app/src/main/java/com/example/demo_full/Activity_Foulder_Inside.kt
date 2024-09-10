@@ -86,13 +86,19 @@ class MainActivity4 : AppCompatActivity(),Click_image {
     fun getMediaInFolder(context: Context, folderName: String): List<Model_Img> {
         val mediaList = ArrayList<Model_Img>()
 
-        // Query images
+        // Query for images
         val imageProjection = arrayOf(
             MediaStore.Images.Media.DATA,              // File path
-            MediaStore.Images.Media.DATE_TAKEN         // Date taken
+            MediaStore.Images.Media.DATE_TAKEN,        // Date taken
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME // Folder name
         )
-        val selection = "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?"
-        val selectionArgs = arrayOf(folderName)
+
+        val selection = if (folderName == "Unknown") {
+            "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} IS NULL OR ${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ''"
+        } else {
+            "${MediaStore.Images.Media.BUCKET_DISPLAY_NAME} = ?"
+        }
+        val selectionArgs = if (folderName == "Unknown") null else arrayOf(folderName)
         val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
         val imageCursor = context.contentResolver.query(
@@ -114,17 +120,25 @@ class MainActivity4 : AppCompatActivity(),Click_image {
             }
         }
 
-        // Query videos
+        // Query for videos
         val videoProjection = arrayOf(
             MediaStore.Video.Media.DATA,              // File path
-            MediaStore.Video.Media.DATE_TAKEN         // Date taken
+            MediaStore.Video.Media.DATE_TAKEN,        // Date taken
+            MediaStore.Video.Media.BUCKET_DISPLAY_NAME // Folder name
         )
+
+        val videoSelection = if (folderName == "Unknown") {
+            "${MediaStore.Video.Media.BUCKET_DISPLAY_NAME} IS NULL OR ${MediaStore.Video.Media.BUCKET_DISPLAY_NAME} = ''"
+        } else {
+            "${MediaStore.Video.Media.BUCKET_DISPLAY_NAME} = ?"
+        }
+        val videoSelectionArgs = if (folderName == "Unknown") null else arrayOf(folderName)
 
         val videoCursor = context.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             videoProjection,
-            selection,
-            selectionArgs,
+            videoSelection,
+            videoSelectionArgs,
             sortOrder
         )
 
@@ -141,6 +155,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
         return mediaList
     }
+
 
 
     @SuppressLint("SuspiciousIndentation")

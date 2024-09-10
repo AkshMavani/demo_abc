@@ -113,5 +113,11 @@ class ImagePagerAdapter_DTA(private val context: Context, private val imageUrls:
         Log.e("TYPE", "recycleview:>>$str_type ", )
         return str_type.toString()
     }
+
+    fun getImageAtPosition(position: Int): Model_Img {
+        // Return the image object for the given position
+        return imageUrls[position]
+    }
+
 }
 
