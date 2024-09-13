@@ -21,6 +21,7 @@ class Activity_Camera1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityCamera1Binding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.button.setOnClickListener { binding.cameraView12.takePicture() }
         cameraView = findViewById(R.id.cameraView12)
         cameraView.setLifecycleOwner(this)
         Log.e("camera12", "onCreate:>>>${cameraView.filter} ")

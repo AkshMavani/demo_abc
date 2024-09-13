@@ -14,6 +14,7 @@ class CustomHorizontalWheelView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
+    private val clickThreshold = 20f
     private var itemMargin = 8f // Default margin in pixels
 
     var selectedItemPosition = 2 // Set to 2 for the 3rd item as default
@@ -105,7 +106,7 @@ class CustomHorizontalWheelView @JvmOverloads constructor(
                 val totalScrollDistance = event.x - startX
                 val dx = totalScrollDistance / (itemWidth + itemMargin)
 
-                if (abs(totalScrollDistance) < 10) {
+                if (abs(totalScrollDistance) < clickThreshold) {
                     // Detect click by checking if the movement was very small
                     val clickedIndex = calculateClickedItemIndex(event.x)
                     setSelectedItemPosition(clickedIndex)

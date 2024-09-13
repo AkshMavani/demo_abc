@@ -33,4 +33,12 @@
         <attr name="layout_peekHeight" format="dimension" />
         <attr name="layout_anchorPoint" format="reference" />
     </declare-styleable>
+<!--    <declare-styleable name="CustomEditText">-->
+<!--        <attr name="fontFamily" format="string" />-->
+<!--        <attr name="textSize" format="dimension" />-->
+<!--        <attr name="textColor" format="color" />-->
+<!--        <attr name="backgroundDrawable" format="reference" />-->
+<!--        <attr name="padding" format="dimension" />-->
+<!--    </declare-styleable>-->
+
 </resources>

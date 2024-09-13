@@ -35,6 +35,18 @@
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
         <activity
+            android:name="com.example.blur.ViewPagerActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.blur.MainActivity14"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Foulder"
+            android:exported="false" />
+        <activity
+            android:name="com.example.gallery.MainActivity11"
+            android:exported="false" />
+        <activity
             android:name="com.example.gallery.ActivityImageDetail"
             android:exported="false" />
         <activity
@@ -74,7 +86,7 @@
             android:name="com.example.abc.activity_sensor"
             android:exported="false" />
         <activity
-            android:name="com.example.wheel.MainActivity_wheelView"
+            android:name="com.example.abc.Activity_Camera1"
             android:exported="false" />
         <activity
             android:name="com.example.Hello_activity_"
@@ -89,7 +101,7 @@
             android:name=".MainActivity_data"
             android:exported="false" />
         <activity
-            android:name="com.example.gallery.MainActivity11"
+            android:name="com.example.abc.MainActivity12"
             android:exported="false" />
         <activity
             android:name="com.example.camera.MainActivity"
@@ -104,7 +116,7 @@
             android:name="com.example.multifit.activity_Multifit"
             android:exported="false" />
         <activity
-            android:name="com.example.abc.Activity_Camera1"
+            android:name="com.example.blur.MainActivity13"
             android:exported="false" />
         <activity
             android:name="com.example.MainActivity"
@@ -136,7 +148,8 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.wheel.MainActivity_wheelView"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

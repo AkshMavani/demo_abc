@@ -17,7 +17,7 @@ import com.techdew.lib.HorizontalWheel.OnWheelScrollListener
 
 class MainActivity_wheelView : AppCompatActivity(), OnWheelScrollListener {
     private lateinit var values: Array<String>
-    var arr= listOf("  short video","  Video","Photo","square  ","Panorama  ")
+    var arr= listOf("short video","Video","Photo","square")
     private lateinit var binding: ActivityMainWheelViewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

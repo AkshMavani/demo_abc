@@ -256,23 +256,28 @@ class GalleryFragment : Fragment() {
 
 
     fun getListImageByDay(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
-        val result = mutableListOf<List<GalleryModel>>()
-        val dayList = mutableListOf<GalleryModel>()
-        mGalleryDayModels = listOf(dayList)
+        val result = mutableListOf<List<GalleryModel>>()  // The final list of grouped images by day
+        var dayList = mutableListOf<GalleryModel>()  // Temporary list for images of the same day
+
         if (!galleryModels.isNullOrEmpty()) {
-            var currentDay = galleryModels[0].days
+            var currentDay = galleryModels[0].days  // Start with the first item's day
+
             for (model in galleryModels) {
                 if (model.path != null) {
                     if (model.days == currentDay) {
+                        // If the current item is from the same day, add it to the current list
                         dayList.add(model)
                     } else {
-                        currentDay = model.days
-                        result.add(dayList.reversed())
-                        dayList.clear()
-                        dayList.add(model)
+                        // If we encounter a new day, add the current list to the result and start a new list
+                        result.add(dayList.reversed())  // Add current day's list to result (reversed to maintain correct order)
+                        dayList = mutableListOf()  // Reset the day list
+                        currentDay = model.days  // Update the current day
+                        dayList.add(model)  // Add the new day's first item
                     }
                 }
             }
+
+            // Add the last group to the result after the loop
             if (dayList.isNotEmpty()) {
                 result.add(dayList.reversed())
             }
@@ -280,7 +285,8 @@ class GalleryFragment : Fragment() {
 
         return result
     }
-//    fun getListImageByMonth(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
+
+    //    fun getListImageByMonth(galleryModels: List<GalleryModel>?): List<List<GalleryModel>> {
 //        val result = mutableListOf<List<GalleryModel>>()
 //        val monthList = mutableListOf<GalleryModel>()
 //        result.clear()
@@ -418,26 +424,28 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    fun loadDataDay(mediaItems:List<GalleryModel>) {
+    fun loadDataDay(mediaItems: List<GalleryModel>) {
         if (binding.rcvDay.adapter != null) {
             return
         }
+
+        // Get the list of images grouped by day
         val listImageByDay: List<List<GalleryModel>> = getListImageByDay(mediaItems)
-        mGalleryDayModels = listImageByDay
-        //this.mGalleryDayModels = listImageByDay
-        if (listImageByDay.size == 0) {
+        if (listImageByDay.isEmpty()) {
             return
         }
+
         dayAdapter = DayAdapter(
             context,
             listImageByDay,
             object : DayAdapter.OnClickCustom {
-
                 override fun onCLick1(view: View?, galleryModel: GalleryModel?, position: Int) {
-                    m250x4bc8bbfd(view!!, galleryModel!!,position)
+                    m250x4bc8bbfd(view!!, galleryModel!!, position)
                 }
-            })
-        binding.rcvDay.adapter = dayAdapter
+            }
+        )
+
+        // Set up the RecyclerView with StickyHeaderGridLayoutManager
         val stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(3)
         stickyHeaderGridLayoutManager.spanSizeLookup = object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(section: Int, position: Int): Int {
@@ -445,13 +453,15 @@ class GalleryFragment : Fragment() {
             }
         }
         stickyHeaderGridLayoutManager.setHeaderBottomOverlapMargin(
-            resources.getDimensionPixelSize(
-                R.dimen._10sdp
-            )
+            resources.getDimensionPixelSize(R.dimen._10sdp)
         )
+
         binding.rcvDay.layoutManager = stickyHeaderGridLayoutManager
+        binding.rcvDay.adapter = dayAdapter
+
         stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.getItemCount() - 1)
     }
+
     fun getAllImages(mediaItems: List<GalleryModel>){
          mAdapter =  MediaAdapter(requireContext(), mediaItems)
             binding.rcvMedia.adapter=mAdapter
