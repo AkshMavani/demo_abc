@@ -1,20 +1,20 @@
 package com.example.abc
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.demo_full.R
 import com.otaliastudios.cameraview.CameraLogger
 import com.otaliastudios.cameraview.CameraView
-import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.frame.Frame
+import com.otaliastudios.cameraview.size.AspectRatio
+import com.otaliastudios.cameraview.size.SizeSelectors
+
 
 class Activity_Camera : AppCompatActivity() {
     companion object {
@@ -37,11 +37,14 @@ class Activity_Camera : AppCompatActivity() {
         CameraLogger.setLogLevel(CameraLogger.LEVEL_VERBOSE)
         camera.setLifecycleOwner(this)
 
+
         camera.addFrameProcessor { frame ->
             Log.e("TAG12", "onCreate:>>>${frame.format} ")
             Log.e("TAG12", "onCreate:>>>${frame.rotation} ")
 
+
         }
+
         // Initialize GestureDetector
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
@@ -49,10 +52,6 @@ class Activity_Camera : AppCompatActivity() {
                 Toast.makeText(this@Activity_Camera, "CameraView clicked!", Toast.LENGTH_SHORT).show()
                 return super.onSingleTapConfirmed(e)
             }
-        })
-        camera.setOnTouchListener(View.OnTouchListener { v, event ->
-            gestureDetector.onTouchEvent(event)
-            true
         })
 
 //        fun onPictureTaken(result: PictureResult) {

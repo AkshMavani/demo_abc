@@ -5,16 +5,27 @@
     android:layout_height="match_parent"
    android:id="@+id/cl"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:id="@+id/img"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
     <com.otaliastudios.cameraview.CameraView
         android:id="@+id/cameraView12"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:cameraAudio="off"
+
+        app:cameraPictureSizeAspectRatio="1:1"
+
+
+
+
         app:cameraFacing="back"
         app:cameraEngine="camera1"
         app:cameraPlaySounds="false"
         android:clickable="true"
+        app:cameraRequestPermissions="true"
         app:cameraAutoFocusMarker="@string/cameraview_default_autofocus_marker"
         app:cameraMode="picture"
         app:layout_constraintBottom_toTopOf="@+id/recycleview_filter"

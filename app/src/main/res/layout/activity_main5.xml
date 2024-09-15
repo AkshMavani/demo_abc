@@ -4,41 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:background="@color/black"
+
     android:layout_height="match_parent"
     tools:context="com.example.blur.MainActivity5">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView_full"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:visibility="gone"-->
-<!--        android:layout_height="match_parent"-->
-<!--       android:src="@drawable/baseline_slow_motion_video_24"/>-->
+    <ImageView
+        android:id="@+id/imageView_full"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/coordinatorLayout" />
 <!--    <VideoView-->
 <!--        android:id="@+id/videoView_full"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:visibility="gone"-->
 <!--        android:layout_height="match_parent"-->
 <!--       android:src="@drawable/baseline_slow_motion_video_24"/>-->
-    <com.xiaopo.flying.sticker.StickerView
-        android:id="@+id/sticker_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:showBorder="true"
-        app:showIcons="true">
         <ImageView
-            android:id="@+id/img_blur"
+            android:id="@+id/img1"
+            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
-    </com.xiaopo.flying.sticker.StickerView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <com.xiaopo.flying.sticker.StickerView
+            android:id="@+id/sticker_view"
+            android:layout_width="match_parent"
 
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showBorder="true"
+            app:showIcons="true">
+        </com.xiaopo.flying.sticker.StickerView>
+
+        <ImageView
+            android:id="@+id/img_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="visible"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -80,9 +110,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recuycleView_blur"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/sticker_view"
+        android:visibility="gone"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

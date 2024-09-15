@@ -36,7 +36,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
         val images = intent?.let { getMediaInFolder(this, it) }
 
-        val imageAdapter = images?.let { ImageAdapter12(this, images as ArrayList<Model_Img>) }
+        val imageAdapter = images?.let { ImageAdapter12(this, images as ArrayList<Model_Img>,this) }
         imageRecyclerView.adapter = imageAdapter
     }
 
