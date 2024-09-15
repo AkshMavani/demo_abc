@@ -117,7 +117,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     public final static int PERMISSION_REQUEST_CODE = 16;
 
     final static long DEFAULT_AUTOFOCUS_RESET_DELAY_MILLIS = 3000;
-    final static boolean DEFAULT_PLAY_SOUNDS = true;
+    final static boolean DEFAULT_PLAY_SOUNDS = false;
     final static boolean DEFAULT_USE_DEVICE_ORIENTATION = true;
     final static boolean DEFAULT_PICTURE_METERING = true;
     final static boolean DEFAULT_PICTURE_SNAPSHOT_METERING = false;
@@ -259,7 +259,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
         doInstantiateEngine();
 
         // Apply self managed
-        setPlaySounds(playSounds);
+
         setUseDeviceOrientation(useDeviceOrientation);
         setGrid(controls.getGrid());
         setGridColor(gridColor);
@@ -799,12 +799,12 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     public void open() {
         if (mInEditor) return;
         if (mCameraPreview != null) mCameraPreview.onResume();
-        if (checkPermissions(getAudio())) {
+
             // Update display orientation for current CameraEngine
             mOrientationHelper.enable();
             mCameraEngine.getAngles().setDisplayOffset(mOrientationHelper.getLastDisplayOffset());
             mCameraEngine.start();
-        }
+
     }
 
     /**
@@ -946,9 +946,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     @SuppressWarnings("unchecked")
     @NonNull
     public <T extends Control> T get(@NonNull Class<T> controlClass) {
-        if (controlClass == Audio.class) {
-            return (T) getAudio();
-        } else if (controlClass == Facing.class) {
+        if (controlClass == Facing.class) {
             return (T) getFacing();
         } else if (controlClass == Flash.class) {
             return (T) getFlash();
@@ -1334,7 +1332,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
      */
     public void setAudio(@NonNull Audio audio) {
 
-        if (audio == getAudio() || isClosed()) {
+        if (isClosed()) {
             // Check did took place, or will happen on start().
             mCameraEngine.setAudio(audio);
 
@@ -1355,10 +1353,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
      * Gets the current audio value.
      * @return the current audio value
      */
-    @NonNull
-    public Audio getAudio() {
-        return mCameraEngine.getAudio();
-    }
+
 
     /**
      * Sets an {@link AutoFocusMarker} to be notified of metering start, end and fail events
@@ -2027,8 +2022,8 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
     @SuppressLint("NewApi")
     private void playSound(int soundType) {
         if (mPlaySounds) {
-            if (mSound == null) mSound = new MediaActionSound();
-            mSound.play(soundType);
+//            if (mSound == null) mSound = new MediaActionSound();
+//            mSound.play(0);
         }
     }
 
@@ -2041,8 +2036,8 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
      * @param playSounds whether to play sound effects
      */
     public void setPlaySounds(boolean playSounds) {
-        mPlaySounds = playSounds && Build.VERSION.SDK_INT >= 16;
-        mCameraEngine.setPlaySounds(playSounds);
+        mPlaySounds = false;
+        mCameraEngine.setPlaySounds(false);
     }
 
     /**
@@ -2260,9 +2255,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
 
         @Override
         public void dispatchOnPictureShutter(boolean shouldPlaySound) {
-            if (shouldPlaySound && mPlaySounds) {
-                playSound(MediaActionSound.SHUTTER_CLICK);
-            }
+
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -2331,7 +2324,7 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
                 @Override
                 public void run() {
                     if (success && mPlaySounds) {
-                        playSound(MediaActionSound.FOCUS_COMPLETE);
+                    //    playSound(MediaActionSound.FOCUS_COMPLETE);
                     }
 
                     if (mAutoFocusMarker != null) {

@@ -1093,7 +1093,7 @@ public class StickerView extends FrameLayout {
       StickerUtils.saveImageToGallery(file, createBitmap());
       StickerUtils.notifySystemGallery(getContext(), file);
     } catch (IllegalArgumentException | IllegalStateException ignored) {
-      //
+
     }
   }
 

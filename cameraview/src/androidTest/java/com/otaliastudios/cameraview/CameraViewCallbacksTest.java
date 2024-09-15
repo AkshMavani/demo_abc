@@ -251,7 +251,7 @@ public class CameraViewCallbacksTest extends BaseTest {
     @Test
     public void testOnShutter() {
         doEndOp(op, true).when(listener).onPictureShutter();
-        camera.mCameraCallbacks.dispatchOnPictureShutter(true);
+        camera.mCameraCallbacks.dispatchOnPictureShutter(false);
         assertNotNull(op.await(DELAY));
         verify(listener, times(1)).onPictureShutter();
     }

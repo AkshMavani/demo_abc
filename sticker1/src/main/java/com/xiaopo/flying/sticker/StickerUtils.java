@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 /**
  * @author wupanjie
  */
-class StickerUtils {
+public class StickerUtils {
   private static final String TAG = "StickerView";
 
   public static File saveImageToGallery(@NonNull File file, @NonNull Bitmap bmp) {

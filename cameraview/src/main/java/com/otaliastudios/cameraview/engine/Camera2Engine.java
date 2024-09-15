@@ -1357,7 +1357,7 @@ public class Camera2Engine extends CameraBaseEngine implements
 
     @Override
     public void setPlaySounds(boolean playSounds) {
-        mPlaySounds = playSounds;
+        mPlaySounds = false;
         mPlaySoundsTask = Tasks.forResult(null);
     }
 
