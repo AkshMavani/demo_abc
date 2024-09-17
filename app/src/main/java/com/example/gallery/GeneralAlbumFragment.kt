@@ -1,11 +1,15 @@
 package com.example.gallery
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.demo_full.R
+import com.example.demo_full.databinding.FragmentGeneralAlbumBinding
+import com.example.gallery.ui.MediaViewModel
+import com.example.gallery.ui.model.AlbumDetail
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,7 +24,12 @@ private const val ARG_PARAM2 = "param2"
 class GeneralAlbumFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
+   // var albumsGeneralAdapter: AlbumsGeneralAdapter? = null
+    var homeViewModel: MediaViewModel? = null
+    var galleryModelList: List<AlbumDetail?> = ArrayList()
+    var backStateName = javaClass.name
     private var param2: String? = null
+    private lateinit var binding:FragmentGeneralAlbumBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +43,77 @@ class GeneralAlbumFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_general_album, container, false)
+        binding = FragmentGeneralAlbumBinding.inflate(inflater, container, false)
+      //  homeViewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
+
+//        homeViewModel.mAlbumModels.observe(viewLifecycleOwner) { albumModels ->
+//            m256xb6d340bb(albumModels)
+//        }
+//
+//        homeViewModel.mGalleryModels.observe(viewLifecycleOwner) { galleryModels ->
+//            binding.tvTotal1.text = AlbumUtil.getAlbumScreenShots(galleryModels).size.toString()
+//        }
+//
+//        homeViewModel.mGalleryModelsVideo.observe(viewLifecycleOwner) { galleryModels ->
+//            if (galleryModels != null) {
+//                binding.tvTotal.text = homeViewModel.mGalleryModelsVideo.value?.size.toString()
+//            }
+//        }
+//
+//        homeViewModel.mGalleryModelsRecent.observe(viewLifecycleOwner) { galleryModels ->
+//            if (galleryModels != null) {
+//                binding.tvTotal2.text = homeViewModel.mGalleryModelsRecent.value?.size.toString()
+//            }
+//        }
+
+        binding.a1.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putInt(a3.a.e, 1)
+            val imageAlbumFragment = ImageAlbumFragment()
+//            imageAlbumFragment.arguments = bundle
+            requireFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.right_in_os14, R.anim.left_out_os14, R.anim.left_in_os14, R.anim.right_out_os14)
+                .setReorderingAllowed(true)
+                .add(R.id.container_album, imageAlbumFragment)
+                .addToBackStack(backStateName)
+                .commit()
+        }
+
+        binding.a2.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putInt(a3.a.e, 2)
+            val imageAlbumFragment = ImageAlbumFragment()
+         //   imageAlbumFragment.arguments = bundle
+            fragmentManager?.beginTransaction()
+                ?.setCustomAnimations(R.anim.right_in_os14, R.anim.left_out_os14, R.anim.left_in_os14, R.anim.right_out_os14)
+                ?.setReorderingAllowed(true)
+                ?.add(R.id.container_album, imageAlbumFragment)
+                ?.addToBackStack(backStateName)
+                ?.commit()
+        }
+
+        binding.a3.setOnClickListener {
+            requireFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .setCustomAnimations(R.anim.right_in_os14, R.anim.left_out_os14, R.anim.left_in_os14, R.anim.right_out_os14)
+                .add(R.id.container_album, RecentDeleteFragment())
+                .addToBackStack(backStateName)
+                .commit()
+        }
+
+        binding.imgAddAlbums.setOnClickListener {
+            //m257x43c057da(it)
+        }
+
+        binding.tvSeeAll.setOnClickListener {
+            fragmentManager?.beginTransaction()
+                ?.setReorderingAllowed(true)
+                ?.setCustomAnimations(R.anim.right_in_os14, R.anim.left_out_os14, R.anim.left_in_os14, R.anim.right_out_os14)
+                ?.add(R.id.container_album, DetailAlbumFragment())
+                ?.addToBackStack(backStateName)
+                ?.commit()
+        }
+        return binding.root
     }
 
     companion object {

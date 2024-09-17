@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <com.k2.zoomimageview.ZoomImageView
         android:id="@+id/imageView"
         android:visibility="gone"
         android:layout_width="match_parent"

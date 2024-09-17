@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +23,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.demo_full.R
@@ -36,10 +36,11 @@ import com.example.gallery.ui.adapter.MonthAdapter
 import com.example.gallery.ui.adapter.YearAdapter
 import com.example.gallery.ui.model.GalleryModel
 import com.example.gallery.util.StickyHeaderGridLayoutManager
+import com.example.gallery.util.Video_Recently_Utils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import java.io.File
-import java.io.Serializable
+import java.util.Calendar
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,9 +55,11 @@ private const val ARG_PARAM2 = "param2"
  */
 class GalleryFragment : Fragment() {
     var MODE_EDIT = 0
+
     var MODE_SELECT = 1
     lateinit var deleteLauncher: ActivityResultLauncher<Intent>
     lateinit var _binding: FragmentGallery2Binding
+    lateinit var stickyHeaderGridLayoutManager: StickyHeaderGridLayoutManager
     var defaultMode: Int = MODE_SELECT
     lateinit var mAdapter: MediaAdapter
     lateinit var dayAdapter:DayAdapter
@@ -88,6 +91,12 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentGallery2Binding.inflate(inflater, container, false)
+
+        Video_Recently_Utils.GalleryImagesTrash(requireContext())
+        Video_Recently_Utils.GalleryVideo(requireContext())
+        Video_Recently_Utils.getListAlbum(requireContext())
+
+
         deleteLauncher = registerForActivityResult<Intent, ActivityResult>(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
@@ -133,7 +142,7 @@ class GalleryFragment : Fragment() {
             loadDataDay(mediaItems)
             getAllImages(mediaItems)
         })
-
+        binding.btnGalleryMore.setOnClickListener { popupWindow() }
         binding.btnSelect.setOnClickListener {
             if (defaultMode == MODE_SELECT) {
                 defaultMode = MODE_EDIT
@@ -396,70 +405,140 @@ class GalleryFragment : Fragment() {
             stickyHeaderGridLayoutManager.scrollToPosition(monthAdapter.getItemCount() - 1)
         }
     }
-    fun year(mediaItems:List<GalleryModel>){
-        val year=getListImageByYear(mediaItems)
-        mGalleryYearModels = year
-        if (year.size > 0) {
-            mGalleryYearModels = year as ArrayList<GalleryModel>
-            binding.rcvYear.adapter = YearAdapter(activity, year as ArrayList<GalleryModel>?, object : YearAdapter.OnClickCuston {
+
+
+    fun year(mediaItems: List<GalleryModel>) {
+        // Group images by year
+        val groupedByYear = mediaItems.groupBy { galleryModel ->
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = galleryModel.datetaken
+            calendar.get(Calendar.YEAR) // Extract the year
+        }
+
+        // Create a list that will contain only the first image of each year
+        val yearWiseGalleryModels = ArrayList<GalleryModel>()
+
+        groupedByYear.forEach { (year, imagesInYear) ->
+            // Get the first image of the year
+            val firstImageOfYear = imagesInYear.firstOrNull()
+            if (firstImageOfYear != null) {
+                yearWiseGalleryModels.add(firstImageOfYear)
+            }
+        }
+
+        mGalleryYearModels = yearWiseGalleryModels
+
+        // Set up the RecyclerView with the updated adapter
+        if (yearWiseGalleryModels.isNotEmpty()) {
+            binding.rcvYear.adapter = YearAdapter(activity, yearWiseGalleryModels, object : YearAdapter.OnClickCuston {
                 override fun onCLick1(galleryModel: GalleryModel) {
                     binding.tabMode.selectTab(binding.tabMode.getTabAt(1))
-
-                    var i = 0
-                    for (i2 in mGalleryMonthModels.indices) {
-                        i += mGalleryMonthModels[i2]!!.size
-                        for (i3 in mGalleryMonthModels[i2]!!.indices) {
-                            if (galleryModel.datetaken == mGalleryMonthModels[i2]!![i3].datetaken) {
-                               mGalleryMonthModels[i2]!![i3]
-                                binding.rcvMonth.layoutManager?.scrollToPosition(i + i2)
-                            }
-                        }
-                    }
-
+                    scrollToMonth(galleryModel)
                 }
             })
+
             val linearLayoutManager = LinearLayoutManager(context)
             binding.rcvYear.layoutManager = linearLayoutManager
-            //linearLayoutManager.scrollToPosition(r0.getItemCount() - 1)
         }
     }
+
+    // Function to scroll to the specific month (same as before)
+    private fun scrollToMonth(galleryModel: GalleryModel) {
+        var i = 0
+        for (i2 in mGalleryMonthModels.indices) {
+            i += mGalleryMonthModels[i2]?.size ?: 0
+            for (i3 in mGalleryMonthModels[i2]?.indices ?: 0 until 0) {
+                if (galleryModel.datetaken == mGalleryMonthModels[i2]?.get(i3)?.datetaken) {
+                    binding.rcvMonth.layoutManager?.scrollToPosition(i + i2)
+                    return
+                }
+            }
+        }
+    }
+
+//    fun loadDataDay(mediaItems: List<GalleryModel>) {
+//        if (binding.rcvDay.adapter != null) {
+//            return
+//        }
+//
+//        // Get the list of images grouped by day
+//        val listImageByDay: List<List<GalleryModel>> = getListImageByDay(mediaItems)
+//        Log.e("Img_Day", "loadDataDay:>>>>>>>>>>$listImageByDay ", )
+//        if (listImageByDay.isEmpty()) {
+//            return
+//        }
+//
+//        dayAdapter = DayAdapter(
+//            mediaViewModel,
+//            context,
+//            listImageByDay,
+//            object : DayAdapter.OnClickCustom {
+//
+//
+//                override fun onCLick1(view: View?, galleryModel: GalleryModel?) {
+//                    m250x4bc8bbfd(view!!, galleryModel!!)
+//                }
+//            }
+//        )
+//
+//
+//        val stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(3)
+//        stickyHeaderGridLayoutManager.spanSizeLookup = object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
+//            override fun getSpanSize(section: Int, position: Int): Int {
+//                Log.e("POSITION12", "loadDataDay: >>>###$position", )
+//                return if (position == 1 || position == 2 || position == 3) 1 else 3
+//            }
+//        }
+//
+//        stickyHeaderGridLayoutManager.setHeaderBottomOverlapMargin(
+//            resources.getDimensionPixelSize(R.dimen._10sdp)
+//        )
+//
+//        binding.rcvDay.layoutManager = stickyHeaderGridLayoutManager
+//        binding.rcvDay.adapter = dayAdapter
+//
+//        stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.getItemCount() - 1)
+//    }
+
 
     fun loadDataDay(mediaItems: List<GalleryModel>) {
         if (binding.rcvDay.adapter != null) {
             return
         }
-
-        // Get the list of images grouped by day
-        val listImageByDay: List<List<GalleryModel>> = getListImageByDay(mediaItems)
-        if (listImageByDay.isEmpty()) {
+        val listImageByDay: List<List<GalleryModel>?> = getListImageByDay(mediaItems)
+        mGalleryDayModels = listImageByDay
+        if (listImageByDay.size == 0) {
             return
         }
 
-        dayAdapter = DayAdapter(
-            context,
-            listImageByDay,
-            object : DayAdapter.OnClickCustom {
-                override fun onCLick1(view: View?, galleryModel: GalleryModel?, position: Int) {
-                    m250x4bc8bbfd(view!!, galleryModel!!, position)
-                }
-            }
-        )
+        stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(3)
+        stickyHeaderGridLayoutManager.setSpanSizeLookup(object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
 
-        // Set up the RecyclerView with StickyHeaderGridLayoutManager
-        val stickyHeaderGridLayoutManager = StickyHeaderGridLayoutManager(3)
-        stickyHeaderGridLayoutManager.spanSizeLookup = object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(section: Int, position: Int): Int {
+                Log.e("POS12", "getSpanSize:>>>###$position ", )
                 return if (position == 1 || position == 2 || position == 3) 1 else 3
             }
-        }
+        })
+
         stickyHeaderGridLayoutManager.setHeaderBottomOverlapMargin(
-            resources.getDimensionPixelSize(R.dimen._10sdp)
+            resources.getDimensionPixelSize(
+                R.dimen._10sdp
+            )
         )
 
         binding.rcvDay.layoutManager = stickyHeaderGridLayoutManager
+        dayAdapter = DayAdapter(mediaViewModel, context, mGalleryDayModels
+        ) { view, galleryModel ->
+            // from class: com.example.iphoto.ui.gallery.GalleryFragment$$ExternalSyntheticLambda4
+            // com.example.iphoto.adapter.DayAdapter.OnClickCustom
+            m250x4bc8bbfd(requireView(), galleryModel!!)
+        }
         binding.rcvDay.adapter = dayAdapter
+        stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.itemCount - 1)
 
-        stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.getItemCount() - 1)
+
+
+
     }
 
     fun getAllImages(mediaItems: List<GalleryModel>){
@@ -763,8 +842,8 @@ class GalleryFragment : Fragment() {
 //    }
 
 
-    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel, position: Int) {
-        var selectedPosition = position
+    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel) {
+
 
 
 
@@ -784,9 +863,23 @@ class GalleryFragment : Fragment() {
 //            navController.navigate(R.id.navigation_detail_iamge, bundle)
             val intent=Intent(requireContext(),ActivityImageDetail::class.java)
             intent.putExtra("image",galleryModel.path)
-            intent.putExtra("position",position)
+            intent.putExtra("position",0)
             startActivity(intent)
       //  })
+    }
+
+    fun popupWindow() {
+        val popupMenu = PopupMenu(requireContext()  , binding.btnGalleryMore)
+        popupMenu.menuInflater.inflate(R.menu.main, popupMenu.menu)
+
+        if (defaultMode == MODE_SELECT) {
+            popupMenu.menu.getItem(2).isVisible = false
+        } else {
+            popupMenu.menu.getItem(2).isVisible = true
+        }
+
+
+        popupMenu.show()
     }
 
 

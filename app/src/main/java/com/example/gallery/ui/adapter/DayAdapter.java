@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModel;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.demo_full.R;
@@ -17,7 +19,6 @@ import com.example.gallery.ui.model.GalleryModel;
 import com.example.gallery.util.DateUtils;
 import com.example.gallery.util.StickyHeaderGridAdapter;
 
-
 import java.util.List;
 
 /* loaded from: classes.dex */
@@ -25,20 +26,20 @@ public class DayAdapter extends StickyHeaderGridAdapter {
     Context context;
     List<List<GalleryModel>> galleryDaylist;
     boolean isChoose;
-
+    MediaViewModel mhomeViewModel;
     OnClickCustom onClickCustom;
     private final SparseBooleanArray selectedItems = new SparseBooleanArray();
 
     /* loaded from: classes.dex */
     public interface OnClickCustom {
-        void onCLick1(View view, GalleryModel galleryModel,int position);
+        void onCLick1(View view, GalleryModel galleryModel);
     }
 
-    public DayAdapter(Context context, List<List<GalleryModel>> galleryDaylist, OnClickCustom onClickCustom) {
+    public DayAdapter(MediaViewModel homeViewModel, Context context, List<List<GalleryModel>> galleryDaylist, OnClickCustom onClickCustom) {
         this.context = context;
         this.galleryDaylist = galleryDaylist;
         this.onClickCustom = onClickCustom;
-
+        this.mhomeViewModel = homeViewModel;
     }
 
     public void setChoose(boolean choose) {
@@ -182,9 +183,13 @@ public class DayAdapter extends StickyHeaderGridAdapter {
                         DayAdapter.this.notifyDataSetChanged();
                         return;
                     }
-                    DayAdapter.this.onClickCustom.onCLick1(view, DayAdapter.this.galleryDaylist.get(adapterPositionSection).get(itemSectionOffset),adapterPositionSection);
+                    DayAdapter.this.onClickCustom.onCLick1(view, DayAdapter.this.galleryDaylist.get(adapterPositionSection).get(itemSectionOffset));
                 }
             });
         }
     }
+    public boolean isHeader(int section) {
+        return section == 0;
+    }
+
 }

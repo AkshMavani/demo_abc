@@ -2,6 +2,7 @@ package com.blurview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -17,12 +18,14 @@ import java.util.List;
 public class HorizontalWheelView extends View implements GestureDetector.OnGestureListener {
 
     private List<String> items = new ArrayList<>();
-    private int selectedItemIndex = 0;
+    private int selectedItemIndex = 2; // Set the 3rd item as selected (0-based index)
     private Paint textPaint;
     private float itemWidth;
     private GestureDetector gestureDetector;
     private OverScroller scroller;
     private OnItemSelectedListener listener;
+    private int defaultTextColor = Color.BLACK; // Default text color
+    private int selectedTextColor = Color.BLUE; // Selected text color
 
     public HorizontalWheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,10 +44,13 @@ public class HorizontalWheelView extends View implements GestureDetector.OnGestu
         this.items = items;
         requestLayout();
         invalidate();
+        // Scroll to the initially selected item
+        post(() -> scrollToItem(selectedItemIndex));
     }
 
     public void setSelectedItemIndex(int index) {
         selectedItemIndex = index;
+        scrollToItem(selectedItemIndex);
         invalidate();
     }
 
@@ -74,6 +80,14 @@ public class HorizontalWheelView extends View implements GestureDetector.OnGestu
 
         for (int i = 0; i < items.size(); i++) {
             float xPos = centerX + (i - selectedItemIndex) * itemWidth;
+
+            // Set text color: blue if selected, black otherwise
+            if (i == selectedItemIndex) {
+                textPaint.setColor(selectedTextColor);
+            } else {
+                textPaint.setColor(defaultTextColor);
+            }
+
             canvas.drawText(items.get(i), xPos, viewHeight / 2.0f, textPaint);
         }
     }
@@ -109,6 +123,12 @@ public class HorizontalWheelView extends View implements GestureDetector.OnGestu
         if (listener != null) {
             listener.onItemSelected(selectedItemIndex);
         }
+    }
+
+    // Scroll to a specific item index
+    private void scrollToItem(int index) {
+        int scrollX = Math.round(index * itemWidth);
+        scrollTo(scrollX, 0);
     }
 
     @Override

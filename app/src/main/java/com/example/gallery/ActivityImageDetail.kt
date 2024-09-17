@@ -31,7 +31,7 @@ class ActivityImageDetail : AppCompatActivity() {
         // Observe the galleryItemsLiveData
         mediaViewModel.galleryItemsLiveData.observe(this, { galleryItems ->
             Log.e("MODEL_999", "onCreate:>>$galleryItems ", )
-            mediaAdapter = MediaPagerAdapter(galleryItems)
+            mediaAdapter = MediaPagerAdapter(galleryItems,this)
 
             binding.pagerPhotos.adapter=mediaAdapter
         })
