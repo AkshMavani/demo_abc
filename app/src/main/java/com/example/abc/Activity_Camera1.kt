@@ -1,9 +1,9 @@
 package com.example.abc
 
 import android.content.ContentValues
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PointF
+import android.media.MediaActionSound
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -23,8 +23,6 @@ import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.VideoResult
 import com.otaliastudios.cameraview.filter.Filters
-import com.otaliastudios.cameraview.size.AspectRatio
-import com.otaliastudios.cameraview.size.SizeSelectors
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -33,6 +31,7 @@ import java.io.OutputStream
 class Activity_Camera1 : AppCompatActivity() {
     private lateinit var cameraView: CameraView
     var arr:ArrayList<Model_Filter> = ArrayList()
+    private var mediaActionSound: MediaActionSound? = null
     private var captureTime: Long = 0
 
     private var currentFilter = 0
@@ -41,9 +40,15 @@ class Activity_Camera1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityCamera1Binding.inflate(layoutInflater)
         setContentView(binding.root)
+        mediaActionSound = MediaActionSound()
+        mediaActionSound!!.load(MediaActionSound.SHUTTER_CLICK)
         binding.cameraView12.addCameraListener(Listener())
-        binding.button.setOnClickListener { binding.cameraView12.takePicture()
+        binding.button.setOnClickListener {
+            binding.cameraView12.takePicture()
 
+        }
+        binding.button1.setOnClickListener {
+            mediaActionSound!!.play(MediaActionSound.SHUTTER_CLICK);
         }
         cameraView = findViewById(R.id.cameraView12)
         cameraView.setLifecycleOwner(this)
@@ -161,6 +166,13 @@ class Activity_Camera1 : AppCompatActivity() {
         fos?.use {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
             Log.d("SaveImage", "Image saved successfully")
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        // Release the mediaActionSound resources when the activity is destroyed
+        if (mediaActionSound != null) {
+            mediaActionSound!!.release()
         }
     }
 }

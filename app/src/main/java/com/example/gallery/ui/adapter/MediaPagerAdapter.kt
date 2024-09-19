@@ -30,11 +30,9 @@ class MediaPagerAdapter(private val mediaPaths: List<GalleryModel>,val context: 
             videoView.setVideoPath(mediaPath.path)
             videoView.start()
         } else {
-            imageView.debugInfoVisible = true
-            imageView.swipeToDismissEnabled = true
-            imageView.onDismiss = {
-                (context as Activity).finish()
-            }
+            imageView.debugInfoVisible = false
+            imageView.swipeToDismissEnabled = false
+
             imageView.visibility = View.VISIBLE
             videoView.visibility = View.GONE
             Glide.with(container.context).load(mediaPath.path).into(imageView)
