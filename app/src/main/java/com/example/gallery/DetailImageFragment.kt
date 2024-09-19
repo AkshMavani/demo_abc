@@ -1,6 +1,7 @@
 package com.example.gallery
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,8 @@ class DetailImageFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var imagePath: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -37,7 +40,16 @@ class DetailImageFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail_image, container, false)
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        // Get the passed data from the arguments
+        arguments?.let {
+            imagePath = it.getString("imagePath")
+        }
+
+        Log.e("path", "onViewCreated: >>>$imagePath", )
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

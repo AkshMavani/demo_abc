@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.demo_full.R
@@ -845,26 +846,26 @@ class GalleryFragment : Fragment() {
     fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel) {
 
 
-
-
+//
+//
 //            val imageView = view as ImageView
 //            val locationOnScreen = IntArray(2)
 //            imageView.getLocationOnScreen(locationOnScreen)
-//
+
 //            // Create a bundle to pass data
-//            val bundle = Bundle().apply {
-//                putIntArray("locationOnScreen", locationOnScreen)
-//                putInt("position",position)
-//                putString("imagePath", galleryModel.path)
-//            }
-//
+            val bundle = Bundle().apply {
+
+                //putIntArray("locationOnScreen", locationOnScreen)
+                putString("imagePath", galleryModel.path)
+            }
+
 //            // Navigate to the DetailImageFragment and pass the bundle
-//            val navController = Navigation.findNavController(requireActivity(), R.id.container_gallery)
-//            navController.navigate(R.id.navigation_detail_iamge, bundle)
-            val intent=Intent(requireContext(),ActivityImageDetail::class.java)
-            intent.putExtra("image",galleryModel.path)
-            intent.putExtra("position",0)
-            startActivity(intent)
+            val navController = Navigation.findNavController(requireActivity(), R.id.container_gallery)
+            navController.navigate(R.id.navigation_detail_iamge, bundle)
+//            val intent=Intent(requireContext(),ActivityImageDetail::class.java)
+//            intent.putExtra("image",galleryModel.path)
+//            intent.putExtra("position",0)
+//            startActivity(intent)
       //  })
     }
 
