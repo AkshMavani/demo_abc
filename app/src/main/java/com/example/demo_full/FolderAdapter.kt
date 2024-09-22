@@ -49,6 +49,9 @@ class FolderAdapter(private val mList: List<Triple<String, String, Long>>, priva
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val ItemsViewModel = mList[position]
+        Log.e("FLP", "onBindViewHolder:${ItemsViewModel.first}", )
+        Log.e("FLP", "onBindViewHolder:${ItemsViewModel.second}", )
+        Log.e("FLP", "onBindViewHolder:${ItemsViewModel.first}", )
         holder.textView.text=ItemsViewModel.first
         Glide.with(context).load(ItemsViewModel.second).centerCrop().placeholder(R.drawable.ic_launcher_background).into(holder.img);
 

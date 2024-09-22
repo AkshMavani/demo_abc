@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.deniz.draggablelibrary.DraggableFrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    app:draggableCorners="topLeft|topRight"
-    app:draggableMaxCornerRadius="40dp"
-    app:draggableScaleFactor="0.5"
-    app:draggableDirections="bottom">
+   >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rrrrr"
-        android:background="@color/tranparent"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pagerPhotos"
-            android:background="@color/tranparent"
+
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,4 +58,4 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.deniz.draggablelibrary.DraggableFrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

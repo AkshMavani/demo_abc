@@ -2,14 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
+    android:id="@+id/dragLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    app:draggableCorners="topLeft|topRight"
-    app:draggableMaxCornerRadius="40dp"
-    app:draggableScaleFactor="0.5"
-    app:draggableDirections="bottom">
+
+    android:background="@color/black_shade"
+   >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rrrrr"
         android:background="@color/tranparent"
@@ -61,4 +59,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:id="@+id/container_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>  -----------
 </androidx.constraintlayout.widget.ConstraintLayout>

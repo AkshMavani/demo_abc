@@ -58,12 +58,15 @@ class GalleryFragment : Fragment() {
     var MODE_EDIT = 0
 
     var MODE_SELECT = 1
+    var currentPosition=0
     lateinit var deleteLauncher: ActivityResultLauncher<Intent>
     lateinit var _binding: FragmentGallery2Binding
     lateinit var stickyHeaderGridLayoutManager: StickyHeaderGridLayoutManager
     var defaultMode: Int = MODE_SELECT
     lateinit var mAdapter: MediaAdapter
     lateinit var dayAdapter:DayAdapter
+    var mGalleryModels: List<GalleryModel?> = ArrayList()
+
 
     //var mGalleryYearModels: ArrayList<GalleryModel> = ArrayList()
      var arr:ArrayList<GalleryModel> = ArrayList()
@@ -137,7 +140,7 @@ class GalleryFragment : Fragment() {
         binding.tabMode.isSmoothScrollingEnabled = true
         mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
             Log.e("Gallery", "onCreateView:>>>>>$mediaItems ")
-
+            mGalleryModels=mediaItems
             year(mediaItems)
             month(mediaItems)
             loadDataDay(mediaItems)
@@ -516,7 +519,7 @@ class GalleryFragment : Fragment() {
         stickyHeaderGridLayoutManager.setSpanSizeLookup(object : StickyHeaderGridLayoutManager.SpanSizeLookup() {
 
             override fun getSpanSize(section: Int, position: Int): Int {
-                Log.e("POS12", "getSpanSize:>>>###$position ", )
+                Log.e("POS12", "getSpanSize:>>>###$position ")
                 return if (position == 1 || position == 2 || position == 3) 1 else 3
             }
         })
@@ -532,7 +535,7 @@ class GalleryFragment : Fragment() {
         ) { view, galleryModel ->
             // from class: com.example.iphoto.ui.gallery.GalleryFragment$$ExternalSyntheticLambda4
             // com.example.iphoto.adapter.DayAdapter.OnClickCustom
-            m250x4bc8bbfd(requireView(), galleryModel!!)
+            m250x4bc8bbfd(view, galleryModel!!)
         }
         binding.rcvDay.adapter = dayAdapter
         stickyHeaderGridLayoutManager.scrollToPosition(dayAdapter.itemCount - 1)
@@ -848,15 +851,23 @@ class GalleryFragment : Fragment() {
 
 //
 //
-//            val imageView = view as ImageView
-//            val locationOnScreen = IntArray(2)
+            val imageView = view as ImageView
+            val locationOnScreen = IntArray(2)
 //            imageView.getLocationOnScreen(locationOnScreen)
 
-//            // Create a bundle to pass data
+        for (i in mGalleryModels.indices) {
+            if (mGalleryModels[i]!!.path.equals(galleryModel.path)) {
+                currentPosition = i
+            }
+        }
+        val iArr = IntArray(2)
+        imageView.getLocationOnScreen(iArr)
             val bundle = Bundle().apply {
-
-                //putIntArray("locationOnScreen", locationOnScreen)
                 putString("imagePath", galleryModel.path)
+                putInt("widget", imageView.width)
+               putInt("height", imageView.height)
+               putInt("position", currentPosition)
+               putIntArray("screenLocation", iArr)
             }
 
 //            // Navigate to the DetailImageFragment and pass the bundle
@@ -868,6 +879,8 @@ class GalleryFragment : Fragment() {
 //            startActivity(intent)
       //  })
     }
+
+
 
     fun popupWindow() {
         val popupMenu = PopupMenu(requireContext()  , binding.btnGalleryMore)

@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-
 import com.example.demo_full.R;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -107,7 +106,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener, Vie
     }
 
     @Override // android.view.View
-    public void setOnClickListener(OnClickListener l) {
+    public void setOnClickListener(View.OnClickListener l) {
         super.setOnClickListener(l);
     }
 
@@ -117,7 +116,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener, Vie
         Code decompiled incorrectly, please refer to instructions dump.
         To view partially-correct code enable 'Show inconsistent code' option in preferences
     */
-    public boolean dispatchTouchEvent(MotionEvent r7) {
+    public boolean dispatchTouchEvent(android.view.MotionEvent r7) {
         /*
             r6 = this;
             r6.lastTouchEvent = r7
@@ -256,7 +255,7 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener, Vie
     }
 
     @Override // android.view.View
-    public void setOnLongClickListener(OnLongClickListener l) {
+    public void setOnLongClickListener(View.OnLongClickListener l) {
         if (this.longClickDefined) {
             return;
         }

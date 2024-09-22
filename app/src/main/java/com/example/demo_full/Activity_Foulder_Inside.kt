@@ -29,8 +29,9 @@ class MainActivity4 : AppCompatActivity(),Click_image {
         Log.e("FLP", "onCreate:$intent ",)
         val a = getMediaInFolder(this, intent.toString())
         Log.e("FLP", "onCreate:>>>>>>>>>>>>>>>$a ",)
-        val imageRecyclerView = findViewById<RecyclerView>(R.id.imageRecyclerView)
 
+        val imageRecyclerView = findViewById<RecyclerView>(R.id.imageRecyclerView)
+        imageRecyclerView.setHasFixedSize(true);
         imageRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
 

@@ -35,6 +35,18 @@
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
         <activity
+            android:name=".Activity_Foulder"
+            android:exported="false" />
+        <activity
+            android:name="com.example.blur.FramActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Ativity_move_fouldet"
+            android:exported="false" />
+        <activity
+            android:name="com.example.gallery.MainActivity17"
+            android:exported="false" />
+        <activity
             android:name="com.blurview.MainActivity16"
             android:exported="false" />
         <activity
@@ -92,7 +104,7 @@
             android:name="com.example.abc.activity_sensor"
             android:exported="false" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.gallery.MainActivity11"
             android:exported="false" />
         <activity
             android:name="com.example.Hello_activity_"
@@ -154,7 +166,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.example.gallery.MainActivity11"
+            android:name=".Activity_pager"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

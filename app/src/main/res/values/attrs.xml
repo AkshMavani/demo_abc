@@ -23,11 +23,8 @@
             <enum name="right" value="2" />
         </attr>
     </declare-styleable>
-    <declare-styleable name="DragLayout">
-        <attr name="dragScale" format="float" />
-        <attr name="dragFriction" format="float" />
-        <attr name="dragTension" format="float" />
-    </declare-styleable>
+    <attr name="background_color_main" format="color">
+    </attr>
     <declare-styleable name="DragLayout_Layout">
         <attr name="layout_slideable" format="boolean" />
         <attr name="layout_peekHeight" format="dimension" />
@@ -40,5 +37,10 @@
 <!--        <attr name="backgroundDrawable" format="reference" />-->
 <!--        <attr name="padding" format="dimension" />-->
 <!--    </declare-styleable>-->
-
+    <declare-styleable name="DragLayout" >
+        <attr name="scale" format="reference|float" />
+        <attr name="springTension" format="reference|float" />
+        <attr name="springFriction" format="reference|float" />
+        <attr name="intercepting" format="reference|boolean" />
+    </declare-styleable>
 </resources>

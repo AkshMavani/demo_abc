@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="drag" />
+
+    <com.example.gallery.util.DragLayout
+        xmlns:draglayout="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drag_layout"
+        android:layout_above="@id/text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        draglayout:scale="1"
+        draglayout:intercepting="false">
+
+        <ImageView
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.example.gallery.util.DragLayout>
+
+</RelativeLayout>

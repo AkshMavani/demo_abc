@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.abc.ImageAdapter
+import com.example.blur.FramActivity
 import com.example.camera.Click_image
 import java.io.Serializable
 
@@ -25,11 +26,18 @@ public class ImageAdapter12(private val context: Context, private val imagePaths
         val path=imagePaths[position]
         Glide.with(context).load(imagePaths[position].str).into(holder.imageView)
         holder.itemView.setOnClickListener {
-//            val intent = Intent(context,MainActivity_data::class.java)
-//            intent.putExtra("imgList",imagePaths as Serializable)
+//            val intent = Intent(context,FramActivity::class.java)
+//            intent.putExtra("imgList",path.str)
 //            intent.putExtra("position",position)
 //            context.startActivity(intent)
-            clickImg.click(path)
+
+            val intent = Intent(context,MainActivity_data::class.java)
+            intent.putExtra("imgList",imagePaths as Serializable)
+            intent.putExtra("position",position)
+            context.startActivity(intent)
+
+
+//            clickImg.click(path)
         }
     }
 

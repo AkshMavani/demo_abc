@@ -112,7 +112,7 @@ class MainActivity_data : AppCompatActivity() {
         val imageList = intent.getStringArrayListExtra("imgList") as ArrayList<Model_Img>
         val clickImg = object : click_img {
             override fun click(img: Model_Img) {
-                Log.e("TAG_DATA223", "click: >>>>>>>>>>>>> ${adapter.set_type()}", )
+                Log.e("TAG_DATA223", "click: >>>>>>>>>>>>> ${adapter.set_type()}")
 
 
             }
@@ -154,15 +154,15 @@ class MainActivity_data : AppCompatActivity() {
 //                startActivity(intent)
 
                 val img = imageList[binding.recyclerView.currentItem]
-                val filePath = img.str
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    // Request permission to modify the file before moving it
-                    requestPermissionThenMoveFile(filePath)
-                } else {
-
-                    moveToFolder(filePath)
-                }
+//                val filePath = img.str
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                    // Request permission to modify the file before moving it
+//                    requestPermissionThenMoveFile(filePath)
+//                } else {
+//
+//                    moveToFolder(filePath)
+//                }
 
 //                val file=File(filePath)
 //                val fileType = getMimeType(file)
@@ -170,8 +170,13 @@ class MainActivity_data : AppCompatActivity() {
 //                intent.putExtra("filePath", filePath)
 //                intent.putExtra("fileType", fileType)
 //                startActivityForResult(intent, MOVE_FILE_REQUEST_CODE)
+                //requestPermissionThenMoveFile(img.str)
 
-
+                val intent = Intent(this, Ativity_move_fouldet::class.java)
+                intent.putExtra("file_path", img.str)
+                intent.putExtra("file_type", img.type)
+                intent.putExtra("flag_foulder", true)
+                startActivityForResult(intent, 101)
             }
         deleteFileLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -185,8 +190,8 @@ class MainActivity_data : AppCompatActivity() {
         adapter = ImagePagerAdapter_DTA(this, imageList, clickImg)
         val currentType = adapter.set_type()
 
-        Log.e("TYPE", "currentType:>>$currentType ", )
-        Log.e("TYPE", "currentType:>>${adapter.str_type} ", )
+        Log.e("TYPE", "currentType:>>$currentType ")
+        Log.e("TYPE", "currentType:>>${adapter.str_type} ")
         Log.e("TAG123", "onCreate: >>POs$position")
         Log.e("TAG123", "onCreate: >>POs$imageList")
 
@@ -226,7 +231,7 @@ class MainActivity_data : AppCompatActivity() {
                     }
                 }
                 binding.buttonPdf.setOnClickListener {
-                    Log.e("TAG123dd", "click:>>>${adapter.getImageAtPosition(position).str} ", )
+                    Log.e("TAG123dd", "click:>>>${adapter.getImageAtPosition(position).str} ")
                     createPdfWithImage(adapter.getImageAtPosition(position).str)
 //                    Log.e("PDF", "img:>>>$img")
 //                    val pdfUri = convertImageToPdf(img.str)
@@ -545,7 +550,7 @@ class MainActivity_data : AppCompatActivity() {
                 newAttributes: PrintAttributes?,
                 cancellationSignal: android.os.CancellationSignal?,
                 callback: PrintDocumentAdapter.LayoutResultCallback?,
-                extras: Bundle?
+                extras: Bundle?,
             ) {
                 callback?.onLayoutFinished(
                     PrintDocumentInfo.Builder(PDF_FILE_NAME).setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT).build(),
@@ -557,7 +562,7 @@ class MainActivity_data : AppCompatActivity() {
                 pages: Array<out PageRange>?,
                 destination: ParcelFileDescriptor,
                 cancellationSignal: android.os.CancellationSignal?,
-                callback: PrintDocumentAdapter.WriteResultCallback?
+                callback: PrintDocumentAdapter.WriteResultCallback?,
             ) {
                 try {
                     FileInputStream(file).use { input ->
