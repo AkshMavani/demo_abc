@@ -109,7 +109,12 @@ class MainActivity_data : AppCompatActivity() {
         }
         val data = intent.getStringExtra("img")
         val position = intent.getIntExtra("position", 0)
+
         val imageList = intent.getStringArrayListExtra("imgList") as ArrayList<Model_Img>
+        var str=intent.getStringExtra("img")
+        if (imageList.get(position).str==str){
+            Log.e("PATH123", "onCreate:####${imageList.get(position)} ", )
+        }
         val clickImg = object : click_img {
             override fun click(img: Model_Img) {
                 Log.e("TAG_DATA223", "click: >>>>>>>>>>>>> ${adapter.set_type()}")
@@ -199,7 +204,7 @@ class MainActivity_data : AppCompatActivity() {
         binding.recyclerView.setCurrentItem(position, false)
         val currentImage = adapter.getImageAtPosition(position)
         Log.e("CurrentImage", "Image Details (Programmatic): $currentImage")
-//        binding.txt.text=currentImage.str.toString()
+//        ding.txt.text=currentImage.str.toString()
 
         binding.recyclerView.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

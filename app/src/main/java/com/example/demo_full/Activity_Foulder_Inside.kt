@@ -166,7 +166,7 @@ class MainActivity4 : AppCompatActivity(),Click_image {
 
         binding.btnClick.setOnClickListener {
             Log.e("img123", "click:${arr} ")
-            val intent = Intent(this, MainActivity5::class.java)
+            val intent = Intent(this, MainActivity_rc::class.java)
             intent.putExtra("flag", false)
             intent.putExtra("img_url", arr as Serializable)
             startActivity(intent)

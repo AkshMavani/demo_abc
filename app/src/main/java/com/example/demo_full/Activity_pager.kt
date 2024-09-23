@@ -29,7 +29,7 @@ class Activity_pager : AppCompatActivity() {
 
         //Set up the view pager and fragments
         val adapter = TabFragmentAdapter(supportFragmentManager)
-        adapter.addFragment(FragmentMediaPager(), "All Images")
+        adapter.addFragment(Fragmentgalley1(), "All Images")
         adapter.addFragment(GalleryFragment(), "Gallry")
         mViewPager.setAdapter(adapter)
         mTabs.setupWithViewPager(mViewPager)

@@ -31,13 +31,14 @@ public class ImageAdapter12(private val context: Context, private val imagePaths
 //            intent.putExtra("position",position)
 //            context.startActivity(intent)
 
-            val intent = Intent(context,MainActivity_data::class.java)
-            intent.putExtra("imgList",imagePaths as Serializable)
-            intent.putExtra("position",position)
-            context.startActivity(intent)
+//            val intent = Intent(context,MainActivity_data::class.java)
+//            intent.putExtra("imgList",imagePaths as Serializable)
+//            intent.putExtra("position",position)
+//            intent.putExtra("img",path.str)
+//            context.startActivity(intent)
 
 
-//            clickImg.click(path)
+            clickImg.click(path)
         }
     }
 
