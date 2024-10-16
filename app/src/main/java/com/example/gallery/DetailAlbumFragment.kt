@@ -2,17 +2,16 @@ package com.example.gallery
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -26,9 +25,9 @@ import com.example.gallery.ui.MediaViewModel
 import com.example.gallery.ui.MediaViewModelFactory
 import com.example.gallery.ui.adapter.ThumbnailAdapter
 import com.example.gallery.ui.model.GalleryModel
-import com.example.gallery.util.DragLayout
 import com.example.gallery.util.IVideoUpdate
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,6 +82,7 @@ class DetailAlbumFragment : Fragment() {
     private val mediaViewModel: MediaViewModel by viewModels { MediaViewModelFactory(MediaRepository(requireContext())) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -355,5 +355,6 @@ class DetailAlbumFragment : Fragment() {
         ofInt.duration = j
         ofInt.start()
     }
+
 
 }

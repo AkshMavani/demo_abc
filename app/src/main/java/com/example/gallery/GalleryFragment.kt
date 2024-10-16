@@ -96,10 +96,6 @@ class GalleryFragment : Fragment() {
     ): View? {
         _binding = FragmentGallery2Binding.inflate(inflater, container, false)
 
-        Video_Recently_Utils.GalleryImagesTrash(requireContext())
-        Video_Recently_Utils.GalleryVideo(requireContext())
-        Video_Recently_Utils.getListAlbum(requireContext())
-
 
         deleteLauncher = registerForActivityResult<Intent, ActivityResult>(
             ActivityResultContracts.StartActivityForResult()

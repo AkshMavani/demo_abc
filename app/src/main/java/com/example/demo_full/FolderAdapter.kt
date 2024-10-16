@@ -1,6 +1,7 @@
 package com.example.demo_full
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -57,10 +58,10 @@ class FolderAdapter(private val mList: List<Triple<String, String, Long>>, priva
 
         holder.itemView.setOnClickListener {
             Log.e("FLP", "onBindViewHolder:$ItemsViewModel ", )
-//            val intent=Intent(context,MainActivity4::class.java)
-//            intent.putExtra("Foulder",ItemsViewModel.first)
-//            context.startActivity(intent)
-            foulderClick.click(ItemsViewModel.first)
+            val intent= Intent(context,MainActivity4::class.java)
+            intent.putExtra("Foulder",ItemsViewModel.first)
+            context.startActivity(intent)
+//            foulderClick.click(ItemsViewModel.first)
         }
 
     }

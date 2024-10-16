@@ -120,7 +120,22 @@ dependencies {
 
     implementation 'com.github.yalantis:ucrop:2.2.6'
     implementation 'com.github.wynneplaga:MaterialScrollbar2:1.0.5'
-    implementation 'com.github.turing-tech:MaterialScrollBar:13.+'
+
     implementation 'com.quiph.ui:recyclerviewfastscroller:1.0.0'
+
+    implementation("com.otaliastudios:zoomlayout:1.9.0")
+
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+
+    implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.Velli20:MaterialUnixGraphLibrary:v1.5'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
 
 }

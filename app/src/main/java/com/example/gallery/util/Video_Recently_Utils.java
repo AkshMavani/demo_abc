@@ -87,10 +87,11 @@ public class Video_Recently_Utils {
         }
     }
     @SuppressLint("Range")
-    public static  void GalleryVideo(Context context){
+    public static  ArrayList<AlbumDetail> GalleryVideo(Context context){
         Uri uri;
+        ArrayList arrayList = new ArrayList();
         try {
-            ArrayList arrayList = new ArrayList();
+
             if (Build.VERSION.SDK_INT >= 29) {
                 uri = MediaStore.Video.Media.getContentUri("external");
             } else {
@@ -139,6 +140,7 @@ public class Video_Recently_Utils {
         } catch (Exception e) {
             e.getMessage();
         }
+        return arrayList;
     }
     public static void getListAlbum(Context context) throws Throwable {
         Uri contentUri;
@@ -180,6 +182,18 @@ public class Video_Recently_Utils {
             e.getMessage();
         }
     }
+    public static List<GalleryModel> getAlbumNames(List<GalleryModel> galleryModels, String bugetId) {
+        ArrayList arrayList = new ArrayList();
+        if (galleryModels != null && galleryModels.size() > 0) {
+            for (int i = 0; i < galleryModels.size(); i++) {
+                if (galleryModels.get(i).getPath() != null && galleryModels.get(i).getBucketDisplayName().equals(bugetId)) {
+                    arrayList.add(galleryModels.get(i));
+                }
+            }
+        }
+        return arrayList;
+    }
+
     public static int getCount(final Context context, final String bucketId) {
         int i = 0;
         Cursor query = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), null, "bucket_display_name=?", new String[]{bucketId}, null);
@@ -213,5 +227,20 @@ public class Video_Recently_Utils {
         }
         return arrayList;
     }
+
+    public static int getCountALbum(List<GalleryModel> galleryModels, String bugetId) {
+        if (galleryModels == null || galleryModels.size() <= 0) {
+            return 0;
+        }
+        int i = 0;
+        for (int i2 = 0; i2 < galleryModels.size(); i2++) {
+            if (galleryModels.get(i2).getPath() != null && galleryModels.get(i2).getBucketDisplayName().equals(bugetId)) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+
 
 }

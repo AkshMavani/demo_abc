@@ -32,6 +32,36 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="listPopupWindowStyle">@style/myListPopupWindow</item>
+    </style>
+    <style name="myListPopupWindow" parent="Widget.MaterialComponents.PopupMenu.ListPopupWindow">
+        <item name="popupMenuBackground">@drawable/round_corner</item>
+    </style>
+    <!-- res/values/styles.xml -->
 
 
+    <style name="CustomPopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@drawable/popup_background</item>
+        <item name="android:dropDownHorizontalOffset">8dp</item>
+        <item name="android:dropDownVerticalOffset">8dp</item>
+        <item name="android:divider">@drawable/divider</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+    <declare-styleable name="DragLayout">
+        <!-- Defines a custom attribute for scale -->
+        <attr name="scale" format="float" />
+
+        <!-- Defines a custom attribute for friction -->
+        <attr name="friction" format="float" />
+
+        <!-- Defines a custom attribute for tension -->
+        <attr name="tension" format="float" />
+    </declare-styleable>
+    <style name="Draggable.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your full-screen and draggable properties here -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

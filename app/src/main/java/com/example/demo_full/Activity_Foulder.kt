@@ -49,7 +49,9 @@ class Activity_Foulder : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         hideSystemUI(this)
+        binding.click.setOnClickListener {
 
+        }
        // showRadioGroupDialog()
         filePath = intent.getStringExtra("file_path");
         fileType = intent.getStringExtra("file_type");
@@ -61,7 +63,6 @@ class Activity_Foulder : AppCompatActivity() {
 
         folderRecyclerView = findViewById(R.id.folderRecyclerView)
         folderRecyclerView.layoutManager = LinearLayoutManager(this)
-
         val click = object : foulder_click {
             override fun click(name: String) {
                 //val filePath = intent.getStringExtra("filePath")
@@ -228,7 +229,6 @@ class Activity_Foulder : AppCompatActivity() {
             }
         }
 
-        // Query for videos
         val videoCursor = context.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             videoProjection,
@@ -246,12 +246,9 @@ class Activity_Foulder : AppCompatActivity() {
                 var folderName = it.getString(folderNameColumn)
                 val videoPath = it.getString(videoPathColumn)
                 val dateTaken = it.getLong(dateTakenColumn) // Get the Date Taken value
-
-                // Fallback for missing or null folder names
                 if (folderName.isNullOrEmpty()) {
                     folderName = "Unknown"
                 }
-
                 if (!seenFolders.contains(folderName)) {
                     seenFolders.add(folderName)
                     folders.add(Triple(folderName, videoPath, dateTaken))

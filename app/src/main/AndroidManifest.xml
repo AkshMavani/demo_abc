@@ -35,6 +35,21 @@
         android:theme="@style/Theme.Demo_full"
         tools:targetApi="31">
         <activity
+            android:name="com.example.filte.MainActivity19"
+            android:exported="false" />
+        <activity
+            android:name="com.example.gallery.MainActivity11"
+            android:exported="false" />
+        <activity
+            android:name=".activity_popup"
+            android:exported="false" />
+        <activity
+            android:name="com.example.zoom.ActivityZoom"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Foulder"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity_rc"
             android:exported="false" />
         <activity
@@ -107,7 +122,7 @@
             android:name="com.example.abc.activity_sensor"
             android:exported="false" />
         <activity
-            android:name="com.example.gallery.MainActivity11"
+            android:name="com.example.gallery.MainActivity18"
             android:exported="false" />
         <activity
             android:name="com.example.Hello_activity_"
@@ -169,7 +184,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity_Foulder"
+            android:name="com.example.tab.ActivityTab"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
