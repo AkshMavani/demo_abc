@@ -65,10 +65,10 @@ class MediaAdapter(
 
             } else {
                 // Handle normal image click here (if needed)
-                val intent= Intent(context, ActivityImageDetail::class.java)
-                intent.putExtra("image",mediaItems.get(position).path)
-                intent.putExtra("position",position)
-               context.startActivity(intent)
+//                val intent= Intent(context, ActivityImageDetail::class.java)
+//                intent.putExtra("image",mediaItems.get(position).path)
+//                intent.putExtra("position",position)
+//               context.startActivity(intent)
             }
         }
     }

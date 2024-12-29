@@ -38,7 +38,7 @@
             android:name="com.example.filte.MainActivity19"
             android:exported="false" />
         <activity
-            android:name="com.example.gallery.MainActivity11"
+            android:name="com.example.tab.ActivityTab"
             android:exported="false" />
         <activity
             android:name=".activity_popup"
@@ -184,7 +184,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.example.tab.ActivityTab"
+            android:name="com.example.gallery.MainActivity11"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.DialogFragment
@@ -123,25 +124,25 @@ class DetailAlbumFragment : Fragment() {
             Log.e("DetailImageFragment", "imagePath: $imagePath")
 
         }
-//        binding.dragLayout.getViewTreeObserver()
-//            .addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-//                // from class: com.example.iphoto.ui.DetailImageFragment.7
-//                // android.view.ViewTreeObserver.OnPreDrawListener
-//                override fun onPreDraw(): Boolean {
-//                    this@DetailAlbumFragment.binding.dragLayout.getViewTreeObserver()
-//                        .removeOnPreDrawListener(this)
-//                    val iArr = IntArray(2)
-//                    this@DetailAlbumFragment.binding.dragLayout.getLocationOnScreen(iArr)
-//                    val detailImageFragment: DetailAlbumFragment = this@DetailAlbumFragment
-//                    detailImageFragment.left = detailImageFragment.screenLocation1.get(0) - iArr[0]
-//                    val detailImageFragment2: DetailAlbumFragment = this@DetailAlbumFragment
-//                    detailImageFragment2.top = detailImageFragment2.screenLocation1.get(1) - iArr[1]
-//                    this@DetailAlbumFragment.wScale = (1000 / this@DetailAlbumFragment.binding.dragLayout.getWidth()).toFloat()
-//                    this@DetailAlbumFragment.hScale = (1000 / this@DetailAlbumFragment.binding.dragLayout.getHeight()).toFloat()
-//                    this@DetailAlbumFragment.runEnterAnimation()
-//                    return true
-//                }
-//            })
+        binding.dragLayout.getViewTreeObserver()
+            .addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                // from class: com.example.iphoto.ui.DetailImageFragment.7
+                // android.view.ViewTreeObserver.OnPreDrawListener
+                override fun onPreDraw(): Boolean {
+                    this@DetailAlbumFragment.binding.dragLayout.getViewTreeObserver()
+                        .removeOnPreDrawListener(this)
+                    val iArr = IntArray(2)
+                    this@DetailAlbumFragment.binding.dragLayout.getLocationOnScreen(iArr)
+                    val detailImageFragment: DetailAlbumFragment = this@DetailAlbumFragment
+                    detailImageFragment.left = detailImageFragment.screenLocation1.get(0) - iArr[0]
+                    val detailImageFragment2: DetailAlbumFragment = this@DetailAlbumFragment
+                    detailImageFragment2.top = detailImageFragment2.screenLocation1.get(1) - iArr[1]
+                    this@DetailAlbumFragment.wScale = ( this@DetailAlbumFragment.binding.dragLayout.getWidth()).toFloat()
+                    this@DetailAlbumFragment.hScale = ( this@DetailAlbumFragment.binding.dragLayout.getHeight()).toFloat()
+                    this@DetailAlbumFragment.runEnterAnimation()
+                    return true
+                }
+            })
         binding.rcvThumbImageBottom.setLayoutManager(LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
             mGalleryModels=mediaItems
@@ -355,6 +356,7 @@ class DetailAlbumFragment : Fragment() {
         ofInt.duration = j
         ofInt.start()
     }
+
 
 
 }

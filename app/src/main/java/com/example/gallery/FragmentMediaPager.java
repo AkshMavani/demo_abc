@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class FragmentMediaPager extends Fragment {
     @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.item, container, false);
+        Log.e("CREDRT", "onCreateView: >>>>>>>      " );
         this.videoPlayer = (VideoPlayer) inflate.findViewById(R.id.video2);
         final PhotoView photoView = (PhotoView) inflate.findViewById(R.id.imageViewMain);
         if (this.galleryModel == null) {

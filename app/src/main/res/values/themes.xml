@@ -48,20 +48,28 @@
         <item name="android:divider">@drawable/divider</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+<!--    <declare-styleable name="DragLayout">-->
+<!--        &lt;!&ndash; Defines a custom attribute for scale &ndash;&gt;-->
+<!--        <attr name="scale" format="float" />-->
+
+<!--        &lt;!&ndash; Defines a custom attribute for friction &ndash;&gt;-->
+<!--        <attr name="friction" format="float" />-->
+
+<!--        &lt;!&ndash; Defines a custom attribute for tension &ndash;&gt;-->
+<!--        <attr name="tension" format="float" />-->
+<!--    </declare-styleable>-->
+<!--    <style name="Draggable.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your full-screen and draggable properties here &ndash;&gt;-->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--    </style>-->
+
     <declare-styleable name="DragLayout">
-        <!-- Defines a custom attribute for scale -->
-        <attr name="scale" format="float" />
-
-        <!-- Defines a custom attribute for friction -->
-        <attr name="friction" format="float" />
-
-        <!-- Defines a custom attribute for tension -->
-        <attr name="tension" format="float" />
+        <attr name="dragScale" format="float" />
+        <attr name="dragFriction" format="float" />
+        <attr name="dragTension" format="float" />
+        <attr name="dragMinDistance" format="integer" />
     </declare-styleable>
-    <style name="Draggable.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your full-screen and draggable properties here -->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
+
 </resources>

@@ -23,7 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.demo_full.R
@@ -37,7 +37,6 @@ import com.example.gallery.ui.adapter.MonthAdapter
 import com.example.gallery.ui.adapter.YearAdapter
 import com.example.gallery.ui.model.GalleryModel
 import com.example.gallery.util.StickyHeaderGridLayoutManager
-import com.example.gallery.util.Video_Recently_Utils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import java.io.File
@@ -58,7 +57,7 @@ class GalleryFragment : Fragment() {
     var MODE_EDIT = 0
 
     var MODE_SELECT = 1
-    var currentPosition=0
+
     lateinit var deleteLauncher: ActivityResultLauncher<Intent>
     lateinit var _binding: FragmentGallery2Binding
     lateinit var stickyHeaderGridLayoutManager: StickyHeaderGridLayoutManager
@@ -243,6 +242,7 @@ class GalleryFragment : Fragment() {
     }
 
     companion object {
+        var currentPosition = 0
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -842,40 +842,48 @@ class GalleryFragment : Fragment() {
 //    }
 
 
+    /* synthetic */   @SuppressLint("UseRequireInsteadOfGet")
     fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel) {
+        /*
+                for (i in mGalleryModels.indices) {
+                    if (mGalleryModels[i]!!.path == galleryModel.path) {
+                       currentPosition = i
+                    }
+                }
 
+                // Pass necessary arguments to the DetailImageFragment
+                val iArr = IntArray(2)
+                view.getLocationOnScreen(iArr)
+                val bundle = Bundle()
+                bundle.putIntArray("image_position", iArr)
+                bundle.putInt("image_width", view.width)
+                bundle.putInt("image_height", view.height)
+                bundle.putString("image_path", galleryModel.path)
 
-//
-//
-            val imageView = view as ImageView
-            val locationOnScreen = IntArray(2)
-//            imageView.getLocationOnScreen(locationOnScreen)
-
+                // Use Navigation Component
+                val navController = NavHostFragment.findNavController(this@GalleryFragment)
+                navController.navigate(
+                    R.id.action_navigation_home_to_navigation_detail_iamge,
+                    bundle
+                )
+*/
         for (i in mGalleryModels.indices) {
-            if (mGalleryModels[i]!!.path.equals(galleryModel.path)) {
-                currentPosition = i
+            if (mGalleryModels[i]?.path.equals(galleryModel.path)) {
+               currentPosition = i
             }
         }
+        val imageView = view as ImageView
         val iArr = IntArray(2)
         imageView.getLocationOnScreen(iArr)
-            val bundle = Bundle().apply {
-                putString("imagePath", galleryModel.path)
-                putInt("widget", imageView.width)
-               putInt("height", imageView.height)
-               putInt("position", currentPosition)
-               putIntArray("screenLocation", iArr)
-            }
-
-//            // Navigate to the DetailImageFragment and pass the bundle
-            val navController = Navigation.findNavController(requireActivity(), R.id.container_gallery)
-            navController.navigate(R.id.navigation_detail_iamge, bundle)
-//            val intent=Intent(requireContext(),ActivityImageDetail::class.java)
-//            intent.putExtra("image",galleryModel.path)
-//            intent.putExtra("position",0)
-//            startActivity(intent)
-      //  })
+        this@GalleryFragment.fragmentManager!!.beginTransaction().setReorderingAllowed(true).add(
+            R.id.container_gallery,
+            DetailImageFragment2.newInstances(iArr, imageView.width, imageView.height)
+        ).addToBackStack(null).commitAllowingStateLoss()
+        this@GalleryFragment.activity!!.overridePendingTransition(0, 0)
+        val navController = NavHostFragment.findNavController(this@GalleryFragment)
+        navController.navigate(
+            R.id.action_navigation_home_to_navigation_detail_iamge)
     }
-
 
 
     fun popupWindow() {

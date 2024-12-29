@@ -111,65 +111,36 @@ public class DragLayout extends FrameLayout implements View.OnTouchListener, Vie
     }
 
     /* JADX WARN: Code restructure failed: missing block: B:4:0x000b, code lost:            if (r0 != 2) goto L19;     */
-    @Override // android.view.ViewGroup, android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-        To view partially-correct code enable 'Show inconsistent code' option in preferences
-    */
-    public boolean dispatchTouchEvent(android.view.MotionEvent r7) {
-        /*
-            r6 = this;
-            r6.lastTouchEvent = r7
-            int r0 = r7.getAction()
-            r1 = 1
-            r2 = 0
-            if (r0 == 0) goto Le
-            r3 = 2
-            if (r0 == r3) goto L29
-            goto L5a
-        Le:
-            float r0 = r7.getX()
-            r6.downX = r0
-            float r0 = r7.getY()
-            r6.downY = r0
-            java.util.concurrent.atomic.AtomicBoolean r0 = r6.isDraggable
-            r0.set(r1)
-            android.view.MotionEvent r0 = r6.lastTouchEvent
-            r0.setAction(r2)
-            android.view.MotionEvent r0 = r6.lastTouchEvent
-            r6.onTouch(r6, r0)
-        L29:
-            float r0 = r7.getX()
-            float r3 = r7.getY()
-            float r4 = r6.downX
-            float r0 = r0 - r4
-            float r4 = r6.downY
-            float r3 = r3 - r4
-            float r4 = java.lang.Math.abs(r0)
-            float r5 = java.lang.Math.abs(r3)
-            int r4 = (r4 > r5 ? 1 : (r4 == r5 ? 0 : -1))
-            if (r4 <= 0) goto L51
-            float r0 = java.lang.Math.abs(r0)
-            int r1 = r6.min_distance
-            float r1 = (float) r1
-            int r0 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
-            if (r0 <= 0) goto L5a
-            r6.intercepting = r2
-            goto L5a
-        L51:
-            int r0 = r6.min_distance
-            float r0 = (float) r0
-            int r0 = (r3 > r0 ? 1 : (r3 == r0 ? 0 : -1))
-            if (r0 < 0) goto L5a
-            r6.intercepting = r1
-        L5a:
-            boolean r7 = super.dispatchTouchEvent(r7)     // Catch: java.lang.Exception -> L5f
-            return r7
-        L5f:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.example.iphoto.view.DragLayout.dispatchTouchEvent(android.view.MotionEvent):boolean");
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        try {
+            this.lastTouchEvent = event;
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN) {
+                this.downX = event.getX();
+                this.downY = event.getY();
+                this.isDraggable.set(true);
+                this.lastTouchEvent.setAction(MotionEvent.ACTION_CANCEL);
+                this.onTouch(this, this.lastTouchEvent);
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                float deltaX = Math.abs(event.getX() - this.downX);
+                float deltaY = Math.abs(event.getY() - this.downY);
+                if (deltaX > deltaY) {
+                    if (deltaX > this.min_distance) {
+                        this.intercepting = false;
+                    }
+                } else if (deltaY > this.min_distance) {
+                    this.intercepting = true;
+                }
+            }
+            return super.dispatchTouchEvent(event);
+        } catch (Exception e) {
+            Log.e(TAG, "Error in dispatchTouchEvent", e);
+            return false;
+        }
     }
+
 
     @Override // android.view.View.OnTouchListener
     public synchronized boolean onTouch(View v, MotionEvent event) {
