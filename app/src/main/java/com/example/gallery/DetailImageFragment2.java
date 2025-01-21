@@ -170,6 +170,12 @@ public class DetailImageFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentDetailImage2Binding.inflate(getLayoutInflater());
+        binding.inHeader.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runExitAnimaton();
+            }
+        });
         MediaRepository repository = new MediaRepository(requireContext()); // Pass the context
         MediaViewModelFactory factory = new MediaViewModelFactory(repository);
 
@@ -189,8 +195,12 @@ public class DetailImageFragment2 extends Fragment {
                 detailImageFragment.left = detailImageFragment.screenLocation1[0] - iArr[0];
                 DetailImageFragment2 detailImageFragment2 = DetailImageFragment2.this;
                 detailImageFragment2.top = detailImageFragment2.screenLocation1[1] - iArr[1];
-//                DetailImageFragment2.this.wScale = 1000 / DetailImageFragment2.this.binding.dragLayout.getWidth();
-//                DetailImageFragment2.this.hScale = 1000 / DetailImageFragment2.this.binding.dragLayout.getHeight();
+                int widget = getArguments().getInt("widget", 0);                  // Default to 0
+                int height = getArguments().getInt("height", 0);                  // Default to 0
+                int[] screenLocation = getArguments().getIntArray("screenLocation");
+
+                DetailImageFragment2.this.wScale = widget/ DetailImageFragment2.this.binding.dragLayout.getWidth();
+                DetailImageFragment2.this.hScale = height / DetailImageFragment2.this.binding.dragLayout.getHeight();
                 DetailImageFragment2.this.runEnterAnimation();
                 return true;
             }
@@ -201,21 +211,31 @@ public class DetailImageFragment2 extends Fragment {
             }
         });
 
+        this.binding.inBottom.imgDelete.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda2
+            @Override // android.view.View.OnClickListener
+            public final void onClick(View view) {
+
+            }
+        });
+        this.binding.dragLayout.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.ui.DetailImageFragment.11
+            @Override // android.view.View.OnClickListener
+            public void onClick(View v) {
+            }
+        });
         this.binding.dragLayout.setDragListener(new DragLayout.DragListener() { // from class: com.example.iphoto.ui.DetailImageFragment.12
-            @Override // com.example.iphoto.view.DragLayout.DragListener
+            @Override
             public void onDragStarted(boolean check) {
             }
 
-            @Override // com.example.iphoto.view.DragLayout.DragListener
+            @Override
             public void onDragFinished(float x, float y) {
                 if (y > 50.0f || y < -100.0f) {
                     DetailImageFragment2.this.runExitAnimaton();
                     return;
                 }
-//                DetailImageFragment2.this.binding.inBottom.getRoot().setVisibility(0);
-//                DetailImageFragment2.this.binding.navigationViewDetail.setVisibility(0);
+
                 DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility(0);
-//                DetailImageFragment2.this.binding.rcvThumbImageBottom.setVisibility(0);
+
                 TypedValue typedValue = new TypedValue();
                 DetailImageFragment2.this.getContext().getTheme().resolveAttribute(R.attr.background_color_main, typedValue, true);
                 if (typedValue.resourceId != 0) {
@@ -225,12 +245,10 @@ public class DetailImageFragment2 extends Fragment {
                 }
             }
 
-            @Override // com.example.iphoto.view.DragLayout.DragListener
+            @Override
             public void onDrag(float x, float y) {
                 DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility(4);
-//                DetailImageFragment2.this.binding.inBottom.getRoot().setVisibility(4);
-//                DetailImageFragment2.this.binding.navigationViewDetail.setVisibility(4);
-//                DetailImageFragment2.this.binding.rcvThumbImageBottom.setVisibility(4);
+
                 DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(0);
                 DetailImageFragment2.this.binding.pagerPhotos.setBackgroundColor(0);
                 DetailImageFragment2.this.binding.rrrrr.setBackgroundColor(0);
@@ -359,7 +377,7 @@ public class DetailImageFragment2 extends Fragment {
     }
     public /* synthetic */ void m224x291f216a() {
         ((MainActivity11) getActivity()).hideDelete();
-        this.homeActivity.getNavView().setVisibility(View.VISIBLE);
+        ((MainActivity11) getActivity()).getNavView().setVisibility(View.VISIBLE);
         new Handler().post(new Runnable() { // from class: com.example.iphoto.ui.DetailImageFragment.18
             @Override // java.lang.Runnable
             public void run() {

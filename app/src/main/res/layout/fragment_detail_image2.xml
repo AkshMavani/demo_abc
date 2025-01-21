@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dragLayout"
     android:layout_width="match_parent"
-
+    android:background="@color/white"
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -36,19 +36,21 @@
 <!--            app:snapGravity="center"-->
 <!--            app:snapMaxFlingSizeFraction="20"-->
 <!--            app:snapScrollMsPerInch="12"/>-->
-<!--        <include-->
-<!--            android:id="@+id/inBottom"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/navigationViewDetail"-->
-<!--            layout="@layout/layout_bottom_multi_select_item"/>-->
-<!--        <include-->
-<!--            android:id="@+id/inBottomDelete"-->
-<!--            android:visibility="gone"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--          -->
-<!--            layout="@layout/layout_bottom_multi_select_item_delete"/>-->
+        <include
+            android:id="@+id/inBottom"
+            layout="@layout/layout_bottom_multi_select_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <include
+            android:id="@+id/inBottomDelete"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            layout="@layout/layout_bottom_multi_select_item_delete"/>
 <!--        <com.example.iphoto.view.NavigationView-->
 <!--            android:id="@+id/navigationViewDetail"-->
 <!--            android:background="?attr/color_background_bottom_multi_share_delete"-->
@@ -57,6 +59,15 @@
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->
 <!--            app:layout_constraintLeft_toLeftOf="parent"-->
 <!--            app:layout_constraintRight_toRightOf="parent"/>-->
-
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.gallery.util.DragLayout>

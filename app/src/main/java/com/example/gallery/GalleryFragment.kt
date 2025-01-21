@@ -23,7 +23,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.demo_full.R
@@ -35,6 +34,7 @@ import com.example.gallery.ui.MediaViewModelFactory
 import com.example.gallery.ui.adapter.DayAdapter
 import com.example.gallery.ui.adapter.MonthAdapter
 import com.example.gallery.ui.adapter.YearAdapter
+import com.example.gallery.ui.click_item
 import com.example.gallery.ui.model.GalleryModel
 import com.example.gallery.util.StickyHeaderGridLayoutManager
 import com.google.android.material.tabs.TabLayout
@@ -64,7 +64,7 @@ class GalleryFragment : Fragment() {
     var defaultMode: Int = MODE_SELECT
     lateinit var mAdapter: MediaAdapter
     lateinit var dayAdapter:DayAdapter
-    var mGalleryModels: List<GalleryModel?> = ArrayList()
+    var mGalleryModels: ArrayList<GalleryModel?> = ArrayList()
 
 
     //var mGalleryYearModels: ArrayList<GalleryModel> = ArrayList()
@@ -135,7 +135,7 @@ class GalleryFragment : Fragment() {
         binding.tabMode.isSmoothScrollingEnabled = true
         mediaViewModel.galleryItemsLiveData.observe(requireActivity(), Observer { mediaItems ->
             Log.e("Gallery", "onCreateView:>>>>>$mediaItems ")
-            mGalleryModels=mediaItems
+            mGalleryModels=mediaItems as ArrayList<GalleryModel?>
             year(mediaItems)
             month(mediaItems)
             loadDataDay(mediaItems)
@@ -154,7 +154,9 @@ class GalleryFragment : Fragment() {
                 }
                 (activity as? MainActivity11)?.view?.findViewById<ImageView>(R.id.img_delete)!!.setOnClickListener {
                     val data= mAdapter.getSelectedImagePaths()
-                    var share= mAdapter.selectItems()
+                    val share= mAdapter.selectItems()
+                    Log.e("SHRT12", "onCreateView:>>$share ", )
+                    Log.e("SHRT12", "onCreateView:>>$data ", )
 //                    share=newArratListIndex
 //                    data=newArratList
                     deleteMultipleMedia(data)
@@ -529,6 +531,7 @@ class GalleryFragment : Fragment() {
         binding.rcvDay.layoutManager = stickyHeaderGridLayoutManager
         dayAdapter = DayAdapter(mediaViewModel, context, mGalleryDayModels
         ) { view, galleryModel ->
+
             // from class: com.example.iphoto.ui.gallery.GalleryFragment$$ExternalSyntheticLambda4
             // com.example.iphoto.adapter.DayAdapter.OnClickCustom
             m250x4bc8bbfd(view, galleryModel!!)
@@ -542,7 +545,12 @@ class GalleryFragment : Fragment() {
     }
 
     fun getAllImages(mediaItems: List<GalleryModel>){
-         mAdapter =  MediaAdapter(requireContext(), mediaItems)
+         mAdapter =  MediaAdapter(requireContext(), mediaItems,object :click_item{
+             override fun click(galleryModel: GalleryModel, position: Int, view: View) {
+                 m250x4bc8bbfd(view,galleryModel)
+             }
+
+         })
             binding.rcvMedia.adapter=mAdapter
     }
     fun selectmonth(galleryModel: GalleryModel) {
@@ -661,10 +669,11 @@ class GalleryFragment : Fragment() {
 
 
     fun deleteMultipleMedia(mediaUrls: List<String?>) {
+        var mediaUri: Uri
         val urisToDelete: MutableList<Uri> = ArrayList()
         for (mediaUrl in mediaUrls) {
             val mediaFile = File(mediaUrl)
-            var mediaUri: Uri?
+
             mediaUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 // For Android 7.0 and above, use FileProvider
                 FileProvider.getUriForFile(
@@ -709,6 +718,26 @@ class GalleryFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("TAG111", "onActivityResult:$resultCode ", )
+        Log.e("TAG111", "onActivityResult:$requestCode ", )
+        if (requestCode==101 && resultCode== -1){
+            val data1=mAdapter.selectItems()
+            Log.e("DATA123", ":>>>>>>####${data1.size} ")
+            Log.e("DATA123", ":>>>>>>####${data1} ")
+            for (i in data1){
+                Log.e("DATA123", ":>>>>>>####${i} ")
+                mGalleryModels.removeAt(i)
+
+                getAllImages(mGalleryModels as ArrayList<GalleryModel>)
+            }
+
+        }
+        defaultMode = MODE_SELECT
+        mAdapter.toggleSelectMode()
     }
 
     // Helper function to get the MediaStore content Uri
@@ -843,47 +872,48 @@ class GalleryFragment : Fragment() {
 
 
     /* synthetic */   @SuppressLint("UseRequireInsteadOfGet")
-    fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel) {
-        /*
-                for (i in mGalleryModels.indices) {
-                    if (mGalleryModels[i]!!.path == galleryModel.path) {
-                       currentPosition = i
+        fun m250x4bc8bbfd(view: View, galleryModel: GalleryModel) {
+            /*
+                    for (i in mGalleryModels.indices) {
+                        if (mGalleryModels[i]!!.path == galleryModel.path) {
+                           currentPosition = i
+                        }
                     }
+
+                    // Pass necessary arguments to the DetailImageFragment
+                    val iArr = IntArray(2)
+                    view.getLocationOnScreen(iArr)
+                    val bundle = Bundle()
+                    bundle.putIntArray("image_position", iArr)
+                    bundle.putInt("image_width", view.width)
+                    bundle.putInt("image_height", view.height)
+                    bundle.putString("image_path", galleryModel.path)
+
+                    // Use Navigation Component
+                    val navController = NavHostFragment.findNavController(this@GalleryFragment)
+                    navController.navigate(
+                        R.id.action_navigation_home_to_navigation_detail_iamge,
+                        bundle
+                    )
+    */
+            for (i in mGalleryModels.indices) {
+                if (mGalleryModels[i]?.path.equals(galleryModel.path)) {
+                   currentPosition = i
                 }
-
-                // Pass necessary arguments to the DetailImageFragment
-                val iArr = IntArray(2)
-                view.getLocationOnScreen(iArr)
-                val bundle = Bundle()
-                bundle.putIntArray("image_position", iArr)
-                bundle.putInt("image_width", view.width)
-                bundle.putInt("image_height", view.height)
-                bundle.putString("image_path", galleryModel.path)
-
-                // Use Navigation Component
-                val navController = NavHostFragment.findNavController(this@GalleryFragment)
-                navController.navigate(
-                    R.id.action_navigation_home_to_navigation_detail_iamge,
-                    bundle
-                )
-*/
-        for (i in mGalleryModels.indices) {
-            if (mGalleryModels[i]?.path.equals(galleryModel.path)) {
-               currentPosition = i
             }
+//            val imageView = view as ImageView
+
+            val iArr = IntArray(2)
+//            imageView.getLocationOnScreen(iArr)
+            this@GalleryFragment.fragmentManager!!.beginTransaction().setReorderingAllowed(true).add(
+                R.id.container_gallery,
+                DetailImageFragment2.newInstances(iArr, view.width, view.height)
+            ).addToBackStack(null).commitAllowingStateLoss()
+            this@GalleryFragment.activity!!.overridePendingTransition(0, 0)
+    //        val navController = NavHostFragment.findNavController(this@GalleryFragment)
+    //        navController.navigate(
+    //            R.id.action_navigation_home_to_navigation_detail_iamge)
         }
-        val imageView = view as ImageView
-        val iArr = IntArray(2)
-        imageView.getLocationOnScreen(iArr)
-        this@GalleryFragment.fragmentManager!!.beginTransaction().setReorderingAllowed(true).add(
-            R.id.container_gallery,
-            DetailImageFragment2.newInstances(iArr, imageView.width, imageView.height)
-        ).addToBackStack(null).commitAllowingStateLoss()
-        this@GalleryFragment.activity!!.overridePendingTransition(0, 0)
-        val navController = NavHostFragment.findNavController(this@GalleryFragment)
-        navController.navigate(
-            R.id.action_navigation_home_to_navigation_detail_iamge)
-    }
 
 
     fun popupWindow() {

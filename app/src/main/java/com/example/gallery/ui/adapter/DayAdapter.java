@@ -1,6 +1,7 @@
 package com.example.gallery.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,6 +173,9 @@ public class DayAdapter extends StickyHeaderGridAdapter {
             this.mImageView.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.adapter.DayAdapter.MyItemViewHolder.2
                 @Override // android.view.View.OnClickListener
                 public void onClick(View view) {
+                    Log.e("IMGGG", "w: "+mImageView.getHeight());
+                    Log.e("IMGGG", "h: "+mImageView.getWidth());
+
                     int adapterPositionSection = DayAdapter.this.getAdapterPositionSection(MyItemViewHolder.this.getAdapterPosition());
                     int itemSectionOffset = DayAdapter.this.getItemSectionOffset(adapterPositionSection, MyItemViewHolder.this.getAdapterPosition());
                     if (DayAdapter.this.isChoose) {
@@ -183,7 +187,7 @@ public class DayAdapter extends StickyHeaderGridAdapter {
                         DayAdapter.this.notifyDataSetChanged();
                         return;
                     }
-                    DayAdapter.this.onClickCustom.onCLick1(view, DayAdapter.this.galleryDaylist.get(adapterPositionSection).get(itemSectionOffset));
+                    DayAdapter.this.onClickCustom.onCLick1(itemView, DayAdapter.this.galleryDaylist.get(adapterPositionSection).get(itemSectionOffset));
                 }
             });
         }

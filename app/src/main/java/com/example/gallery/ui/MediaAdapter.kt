@@ -2,7 +2,6 @@ package com.example.gallery.ui
 
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +10,14 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demo_full.R
-import com.example.gallery.ActivityImageDetail
 import com.example.gallery.ui.model.GalleryModel
-
+interface click_item{
+    fun click(galleryModel: GalleryModel,position: Int,view: View)
+}
 
 class MediaAdapter(
     private val context: Context,
-    private val mediaItems: List<GalleryModel>
+    private val mediaItems: List<GalleryModel>,val clickItem: click_item
 ) : RecyclerView.Adapter<MediaAdapter.MediaViewHolder>() {
 
     // Keep track of selected items
@@ -64,11 +64,7 @@ class MediaAdapter(
 
 
             } else {
-                // Handle normal image click here (if needed)
-//                val intent= Intent(context, ActivityImageDetail::class.java)
-//                intent.putExtra("image",mediaItems.get(position).path)
-//                intent.putExtra("position",position)
-//               context.startActivity(intent)
+                clickItem.click(path,position,holder.mediaImageView)
             }
         }
     }
@@ -92,7 +88,7 @@ class MediaAdapter(
     }
     fun getSelectedImagePaths(): ArrayList<String> {
         selected_Item_Send.clear()
-        Log.e("GET_SELECTED_IMAGES", "onBindViewHolder:>>$selectedItems", )
+        Log.e("GET_SELECTED_IMAGES", "onBindViewHolder:>>$selectedItems")
         for (i in selectedItems){
             Log.e("GET_SELECTED_IMAGES", "onBindViewHolder:${mediaItems.get(i).path} ")
             selected_Item_Send.add(mediaItems.get(i).path.toString())

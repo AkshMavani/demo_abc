@@ -64,7 +64,7 @@ public class FragmentMediaPager extends Fragment {
     @Override // androidx.fragment.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.item, container, false);
-        Log.e("CREDRT", "onCreateView: >>>>>>>      " );
+        Log.e("CREDRT", "onCreateView: >>>>>>>      "+galleryModel.getPath() );
         this.videoPlayer = (VideoPlayer) inflate.findViewById(R.id.video2);
         final PhotoView photoView = (PhotoView) inflate.findViewById(R.id.imageViewMain);
         if (this.galleryModel == null) {
@@ -164,14 +164,14 @@ public class FragmentMediaPager extends Fragment {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEvent(NotifyFragmentPager fragmentPager) {
-//        if (fragmentPager != null && fragmentPager.getMesage().equals(h.g0)) {
-//            if (this.isComplete) {
-//                this.videoPlayer.resume();
-//                this.isComplete = false;
-//            }
-//            this.videoPlayer.start();
-//            return;
-//        }
+        if (fragmentPager != null ) {
+            if (this.isComplete) {
+                this.videoPlayer.resume();
+                this.isComplete = false;
+            }
+            this.videoPlayer.start();
+            return;
+        }
         if (fragmentPager != null && fragmentPager.getMesage().equals("start")) {
             if (fragmentPager.getMpos() == this.position) {
                 this.videoPlayer.seekTo(0);
