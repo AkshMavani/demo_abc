@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,8 +15,10 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -41,6 +45,7 @@ import com.example.gallery.util.DragLayout;
 import com.example.gallery.util.FIleUtils;
 import com.example.gallery.util.IVideoUpdate;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,6 +181,14 @@ public class DetailImageFragment2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentDetailImage2Binding.inflate(getLayoutInflater());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.setData(Uri.parse("package:" +requireContext().getPackageName()));
+                startActivity(intent);
+            }
+        }
+        Log.e("GETLIST", "onCreateView: "+getImagesFromAppFolder() );
         binding.inHeader.imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -334,8 +347,9 @@ public class DetailImageFragment2 extends Fragment {
                 @Override // com.example.iphoto.callback.IVideoUpdate
                 public void updateClickItem() {
                     Log.e("CHL1", "updateClickItem:>>> "+name );
-                    DetailImageFragment2.this.bottomSheetAddPhotoToAlbum = new AddPhotoToGallery(DetailImageFragment2.this, DetailImageFragment2.this.name, DetailImageFragment2.this.mGalleryModels);
-                    DetailImageFragment2.this.bottomSheetAddPhotoToAlbum.show(DetailImageFragment2.this.getChildFragmentManager(), DetailImageFragment2.this.getTag());
+                 /*   DetailImageFragment2.this.bottomSheetAddPhotoToAlbum = new AddPhotoToGallery(DetailImageFragment2.this, DetailImageFragment2.this.name, DetailImageFragment2.this.mGalleryModels);
+                    DetailImageFragment2.this.bottomSheetAddPhotoToAlbum.show(DetailImageFragment2.this.getChildFragmentManager(), DetailImageFragment2.this.getTag());*/
+                    moveImageToAppFolder(mGalleryModels.get(GalleryFragment.Companion.getCurrentPosition()).getPath());
 
                     if (DetailImageFragment2.this.binding.inHeader.getRoot().getVisibility() == 0) {
                         DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility( 4);
@@ -449,6 +463,60 @@ public class DetailImageFragment2 extends Fragment {
                 DetailImageFragment2.lambda$onActivityResult$12();
             }
         }).moveFile(this.bottomSheetAddPhotoToAlbum.getFolder(), this.bottomSheetAddPhotoToAlbum.getGalleryModelList());
+    }
+    public void moveImageToAppFolder(String sourcePath) {
+        File sourceFile = new File(sourcePath);
+        File destDir = new File(requireContext().getExternalFilesDir(null), "HiddenImages");
+
+        if (!destDir.exists()) {
+            destDir.mkdirs(); // Create folder if it doesn't exist
+        }
+
+        File destFile = new File(destDir, sourceFile.getName());
+        if (sourceFile.renameTo(destFile)) {
+            Log.d("FileOperation", "Image moved successfully: " + destFile.getPath());
+        } else {
+            Log.e("FileOperation", "Failed to move the image.");
+        }
+    }
+
+    public List<File> getImagesFromAppFolder() {
+        // Define the app's private "HiddenImages" folder
+        File destDir = new File(requireContext().getExternalFilesDir(null), "HiddenImages");
+
+        // Check if the directory exists
+        if (!destDir.exists()) {
+            Log.e("FileOperation", "HiddenImages folder does not exist.");
+            return new ArrayList<>(); // Return an empty list if the folder doesn't exist
+        }
+
+        // List all image files in the folder
+        File[] files = destDir.listFiles();
+        List<File> imageFiles = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && isImageFile(file)) {
+                    Log.e("GETLIST", "getImagesFromAppFolder: "+file );
+                    imageFiles.add(file); // Add valid image files to the list
+                }
+            }
+        }
+
+        return imageFiles;
+    }
+
+    // Helper method to check if a file is an image
+    private boolean isImageFile(File file) {
+        String[] imageExtensions = {"jpg", "jpeg", "png", "gif", "bmp"};
+        String fileName = file.getName().toLowerCase();
+
+        for (String extension : imageExtensions) {
+            if (fileName.endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

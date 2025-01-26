@@ -60,7 +60,7 @@ public class FIleUtils {
                     contentValues.put("mime_type", fileExtensionFromUrl != null ? MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtensionFromUrl) : null);
                     contentValues.put("relative_path", Environment.DIRECTORY_DCIM + "/" + folder);
                     contentValues.put("bucket_display_name", folder);
-                    FileProvider.getUriForFile(this.context, "com.photos.gallery.photoeditor.provider", file);
+                    FileProvider.getUriForFile(this.context, "com.photos.gallery.photoeditor.provider1", file);
                     this.context.getContentResolver().update(Uri.parse(galleryModel.getUri()), contentValues, null);
                     String str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/" + folder + File.separator + file.getName();
                     arrayList.add(str);

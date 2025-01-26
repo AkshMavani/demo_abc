@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -215,7 +216,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.photos.gallery.photoeditor.provider"
+            android:authorities="com.photos.gallery.photoeditor.provider1"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -228,5 +229,6 @@
             android:exported="false"
             android:foregroundServiceType="location" />
     </application>
+
 
 </manifest>

@@ -202,13 +202,7 @@ public class AddPhotoToGallery extends BottomSheetDialogFragment implements IIma
         });
     }
 
-    @Override // androidx.fragment.app.Fragment
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e("CHL1", "onActivityResult: "+resultCode );
-        Log.e("CHL1", "onActivityResult: "+requestCode );
 
-    }
 
     public final List<Uri> changelistImage(ArrayList<GalleryModel> arrayList) {
         LinkedList linkedList = new LinkedList();
