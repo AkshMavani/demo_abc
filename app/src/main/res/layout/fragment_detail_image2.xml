@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.gallery.util.DragLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dragLayout"
+
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent">
+    <include
+        android:id="@+id/inHeader"
+        layout="@layout/layout_header_detail_image"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/rrrrr"
@@ -20,9 +24,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-        <include
-            android:id="@+id/inHeader"
-            layout="@layout/layout_header_detail_image"/>
+
 <!--        <com.github.rubensousa.gravitysnaphelper.GravitySnapRecyclerView-->
 <!--            android:orientation="horizontal"-->
 <!--            android:id="@+id/rcvThumbImageBottom"-->
@@ -70,4 +72,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.example.gallery.util.DragLayout>
+    <ImageView
+        android:id="@+id/img_more"
+        android:padding="5dp"
+        android:visibility="visible"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="72sp"
+        android:layout_marginEnd="@dimen/_14sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_menu"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

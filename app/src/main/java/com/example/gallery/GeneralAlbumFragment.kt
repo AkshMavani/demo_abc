@@ -19,6 +19,7 @@ import com.example.demo_full.R
 import com.example.demo_full.databinding.FragmentGeneralAlbumBinding
 import com.example.gallery.ui.MediaViewModel
 import com.example.gallery.ui.adapter.AlbumsGeneralAdapter
+import com.example.gallery.ui.adapter.DialogCreateAlbum
 import com.example.gallery.ui.model.AlbumDetail
 import com.example.gallery.util.Video_Recently_Utils
 
@@ -96,6 +97,7 @@ class GeneralAlbumFragment : Fragment() {
                 .addToBackStack(null).commit()
         }
         binding.imgAddAlbums.setOnClickListener {
+            DialogCreateAlbum(this, homeViewModel).showPictureialog()
 //            val listPopupWindow = ListPopupWindow(requireContext())
 //            listPopupWindow.setAdapter(popUpAdapter)
 //            listPopupWindow.setAnchorView(itemView)

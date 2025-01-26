@@ -3,6 +3,7 @@ package com.example.gallery;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,21 +19,26 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.PopupMenu;
 
+import com.example.abc.BottomSheetDialog;
 import com.example.demo_full.R;
 import com.example.demo_full.databinding.FragmentDetailImage2Binding;
 import com.example.gallery.ui.MediaRepository;
 import com.example.gallery.ui.MediaViewModel;
 import com.example.gallery.ui.MediaViewModelFactory;
+import com.example.gallery.ui.adapter.AddPhotoToGallery;
 import com.example.gallery.ui.adapter.ThumbnailAdapter;
 import com.example.gallery.ui.model.GalleryModel;
 import com.example.gallery.util.AlbumUtil;
 import com.example.gallery.util.DragLayout;
+import com.example.gallery.util.FIleUtils;
 import com.example.gallery.util.IVideoUpdate;
 
 import java.util.ArrayList;
@@ -49,7 +55,7 @@ public class DetailImageFragment2 extends Fragment {
     int height;
     MainActivity11 homeActivity;
     MediaViewModel homeViewModel;
-
+    AddPhotoToGallery bottomSheetAddPhotoToAlbum;
     boolean isLoad;
     private ConstraintLayout.LayoutParams layoutParams;
     int left;
@@ -176,16 +182,23 @@ public class DetailImageFragment2 extends Fragment {
                 runExitAnimaton();
             }
         });
+        binding.imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         MediaRepository repository = new MediaRepository(requireContext()); // Pass the context
         MediaViewModelFactory factory = new MediaViewModelFactory(repository);
 
         homeViewModel = new ViewModelProvider(this, factory).get(MediaViewModel.class);
         initList();
+
         setuplist();
 //        this.pagerAdapterMediaFragment.getItem(GalleryFragment.Companion.getCurrentPosition());
 //        this.binding.pagerPhotos.setAdapter(this.pagerAdapterMediaFragment);
 //       binding.pagerPhotos.setCurrentItem(GalleryFragment.Companion.getCurrentPosition(), false);
-        this.binding.dragLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() { // from class: com.example.iphoto.ui.DetailImageFragment.7
+      /*  this.binding.dragLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() { // from class: com.example.iphoto.ui.DetailImageFragment.7
             @Override // android.view.ViewTreeObserver.OnPreDrawListener
             public boolean onPreDraw() {
                 DetailImageFragment2.this.binding.dragLayout.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -209,15 +222,20 @@ public class DetailImageFragment2 extends Fragment {
             @Override // android.view.View.OnClickListener
             public void onClick(View v) {
             }
+        });*/
+        binding.pagerPhotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("click", "onClick: " );
+            }
         });
-
         this.binding.inBottom.imgDelete.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda2
             @Override // android.view.View.OnClickListener
             public final void onClick(View view) {
 
             }
         });
-        this.binding.dragLayout.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.ui.DetailImageFragment.11
+        /*this.binding.dragLayout.setOnClickListener(new View.OnClickListener() { // from class: com.example.iphoto.ui.DetailImageFragment.11
             @Override // android.view.View.OnClickListener
             public void onClick(View v) {
             }
@@ -234,7 +252,7 @@ public class DetailImageFragment2 extends Fragment {
                     return;
                 }
 
-                DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility(0);
+               *//* DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility(0);
 
                 TypedValue typedValue = new TypedValue();
                 DetailImageFragment2.this.getContext().getTheme().resolveAttribute(R.attr.background_color_main, typedValue, true);
@@ -242,7 +260,7 @@ public class DetailImageFragment2 extends Fragment {
                     DetailImageFragment2.this.binding.dragLayout.setBackgroundResource(typedValue.resourceId);
                 } else {
                     DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(typedValue.data);
-                }
+                }*//*
             }
 
             @Override
@@ -253,12 +271,12 @@ public class DetailImageFragment2 extends Fragment {
                 DetailImageFragment2.this.binding.pagerPhotos.setBackgroundColor(0);
                 DetailImageFragment2.this.binding.rrrrr.setBackgroundColor(0);
             }
-        });
+        });*/
 
         return binding.getRoot();
 
     }
-    public void runEnterAnimation() {
+    /*public void runEnterAnimation() {
         this.binding.dragLayout.setPivotX(0.0f);
         this.binding.dragLayout.setPivotY(0.0f);
         try {
@@ -273,7 +291,7 @@ public class DetailImageFragment2 extends Fragment {
         @SuppressLint("ObjectAnimatorBinding") ObjectAnimator ofInt = ObjectAnimator.ofInt(this.binding.getRoot(), "alpha", 0, 255);
         ofInt.setDuration(j);
         ofInt.start();
-    }
+    }*/
 
     public void initList() {
         List<GalleryModel> list = this.mGalleryModels;
@@ -315,13 +333,17 @@ public class DetailImageFragment2 extends Fragment {
 
                 @Override // com.example.iphoto.callback.IVideoUpdate
                 public void updateClickItem() {
+                    Log.e("CHL1", "updateClickItem:>>> "+name );
+                    DetailImageFragment2.this.bottomSheetAddPhotoToAlbum = new AddPhotoToGallery(DetailImageFragment2.this, DetailImageFragment2.this.name, DetailImageFragment2.this.mGalleryModels);
+                    DetailImageFragment2.this.bottomSheetAddPhotoToAlbum.show(DetailImageFragment2.this.getChildFragmentManager(), DetailImageFragment2.this.getTag());
+
                     if (DetailImageFragment2.this.binding.inHeader.getRoot().getVisibility() == 0) {
                         DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility( 4);
 //                        DetailImageFragment2.this.binding.inBottom.getRoot().setVisibility(4);
 //                        DetailImageFragment2.this.binding.navigationViewDetail.setVisibility(4);
 //                        DetailImageFragment2.this.binding.inBottomDelete.getRoot().setVisibility(8);
 //                        DetailImageFragment2.this.binding.rcvThumbImageBottom.setVisibility(4);
-                        DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(-16777216);
+                      //  DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(-16777216);
                         return;
                     }
                     DetailImageFragment2.this.binding.inHeader.getRoot().setVisibility(0);
@@ -338,9 +360,9 @@ public class DetailImageFragment2 extends Fragment {
                     TypedValue typedValue = new TypedValue();
                     DetailImageFragment2.this.getActivity().getTheme().resolveAttribute(R.attr.background_color_main, typedValue, true);
                     if (typedValue.resourceId != 0) {
-                        DetailImageFragment2.this.binding.dragLayout.setBackgroundResource(typedValue.resourceId);
+                     //   DetailImageFragment2.this.binding.dragLayout.setBackgroundResource(typedValue.resourceId);
                     } else {
-                        DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(typedValue.data);
+                      //  DetailImageFragment2.this.binding.dragLayout.setBackgroundColor(typedValue.data);
                     }
                 }
             });
@@ -357,15 +379,15 @@ public class DetailImageFragment2 extends Fragment {
 //        this.binding.inBottom.getRoot().setVisibility(4);
 //        this.binding.navigationViewDetail.setVisibility(4);
 //        this.binding.rcvThumbImageBottom.setVisibility(4);
-        this.binding.dragLayout.setBackgroundColor(0);
+     //   this.binding.dragLayout.setBackgroundColor(0);
         this.binding.pagerPhotos.setBackgroundColor(0);
         long j = 150;
-        this.binding.dragLayout.animate().setDuration(j).scaleX(this.wScale).scaleY(this.hScale).translationX(this.left).translationY(this.top).withEndAction(new Runnable() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda6
+    /*    this.binding.dragLayout.animate().setDuration(j).scaleX(this.wScale).scaleY(this.hScale).translationX(this.left).translationY(this.top).withEndAction(new Runnable() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda6
             @Override // java.lang.Runnable
             public final void run() {
                 DetailImageFragment2.this.m224x291f216a();
             }
-        });
+        });*/
         ObjectAnimator ofInt = ObjectAnimator.ofInt(this.binding.getRoot(), "alpha", 0, 255);
         ofInt.setDuration(j);
         ofInt.start();
@@ -406,6 +428,29 @@ public class DetailImageFragment2 extends Fragment {
         }
         return displayMetrics.heightPixels;
     }
+    @Override // androidx.fragment.app.Fragment
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 333 && resultCode == -1) {
+
+            new Handler().post(new Runnable() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda5
+                @Override // java.lang.Runnable
+                public final void run() {
+                    m215xcc925db0();
+                }
+            });
+        }
+    }
+    public /* synthetic */ void m215xcc925db0() {
+        Log.e("GETDTA", "m215xcc925db0: " );
+        new FIleUtils(getContext(), this.homeViewModel, new FIleUtils.Update() { // from class: com.example.iphoto.ui.DetailImageFragment$$ExternalSyntheticLambda4
+            @Override // com.example.iphoto.util.FIleUtils.Update
+            public final void onUpdate() {
+                DetailImageFragment2.lambda$onActivityResult$12();
+            }
+        }).moveFile(this.bottomSheetAddPhotoToAlbum.getFolder(), this.bottomSheetAddPhotoToAlbum.getGalleryModelList());
+    }
+
 }
 
 

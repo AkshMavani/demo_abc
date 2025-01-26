@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt"
+    android:id="@+id/layout_root"
+    android:background="#00000000"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundGravity="bottom">
+    <androidx.cardview.widget.CardView
+        android:layout_gravity="bottom"
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/transparent"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_gravity="top"
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.blurview.BlurView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/layout_root2"
+                app:layout_constraintLeft_toLeftOf="@+id/layout_root2"
+                app:layout_constraintRight_toRightOf="@+id/layout_root2"
+                app:layout_constraintTop_toTopOf="@+id/layout_root2"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_root2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <View
+                    android:id="@+id/vBg"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl"
+                    app:layout_constraintLeft_toLeftOf="@+id/cl"
+                    app:layout_constraintRight_toRightOf="@+id/cl"
+                    app:layout_constraintTop_toTopOf="@+id/cl"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2">
+                    <TextView
+                        android:textSize="@dimen/text_size_17sp"
+                        android:textStyle="bold"
+
+                        android:gravity="center"
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_19dp"
+                        android:text="@string/new_album"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                    <TextView
+                        android:textSize="@dimen/text_size_13sp"
+
+                        android:gravity="center"
+                        android:id="@+id/tvDes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_2dp"
+                        android:text="@string/enter_a_name_for_this_album"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitle"/>
+                    <EditText
+                        android:textSize="@dimen/text_size_13sp"
+
+                        android:textColorHint="@color/tranparent"
+                        android:id="@+id/edtTitleAlbums"
+
+                        android:padding="@dimen/padding_5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_32dp"
+                        android:hint="cccccccccccccccccccccccccccccccccccccccccc"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="50"
+                        android:layout_marginStart="@dimen/margin_16"
+                        android:layout_marginEnd="@dimen/margin_16"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvDes"/>
+                    <View
+                        android:id="@+id/vLineBottomEdt"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/size_0_5dp"
+                        android:layout_marginTop="@dimen/margin_18dp"
+                        app:layout_constraintTop_toBottomOf="@+id/edtTitleAlbums"/>
+                    <View
+                        android:id="@+id/view2"
+
+                        android:layout_width="@dimen/size_0_5dp"
+                        android:layout_height="@dimen/size_0"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/vLineBottomEdt"/>
+                    <TextView
+                        android:textSize="@dimen/text_size_16sp"
+                        android:textColor="@color/color_green2"
+                        android:gravity="center"
+                        android:id="@+id/tvCancel"
+
+                        android:padding="@dimen/padding_11"
+                        android:layout_width="@dimen/size_0"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel"
+
+                        app:layout_constraintEnd_toStartOf="@+id/view2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/vLineBottomEdt"/>
+                    <TextView
+                        android:textSize="@dimen/text_size_16sp"
+                        android:textColor="@color/color_green2"
+                        android:gravity="center"
+                        android:id="@+id/tvSave"
+
+                        android:padding="@dimen/padding_11"
+                        android:layout_width="@dimen/size_0"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save"
+
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/view2"
+                        app:layout_constraintTop_toBottomOf="@+id/vLineBottomEdt"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

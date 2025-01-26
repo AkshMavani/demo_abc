@@ -1,13 +1,11 @@
 package com.example.gallery
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,10 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo_full.R
 import com.example.demo_full.databinding.FragmentImageAlbumBinding
-import com.example.gallery.DetailAlbumFragment.Companion.currentPosition
 import com.example.gallery.ui.MediaViewModel
 import com.example.gallery.ui.model.GalleryModel
-import com.example.gallery.util.BottomSheetAddPhotoToAlbum
 import com.example.gallery.util.Video_Recently_Utils.getAlbumNames
 
 // TODO: Rename parameter arguments, choose names that match
