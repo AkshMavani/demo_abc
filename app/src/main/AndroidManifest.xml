@@ -27,7 +27,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Request location permission to be able to use the location foreground service type -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+  <!--  <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        android:minSdkVersion="33" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />-->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -191,6 +196,10 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name="com.net.kenevans.android.duplicateimagehandler.GroupActivity" android:exported="false"/>
+        <activity android:name="com.net.kenevans.android.duplicateimagehandler.InfoActivity" android:exported="false"/>
+        <activity android:name="com.example.gallery.MainActivity11" android:exported="false"/>
+
         <activity
             android:name=".VideoTrimmerActivity"
             android:configChanges="orientation|screenSize"
@@ -199,7 +208,7 @@
             android:theme="@style/AppTheme.SlidrActivityTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.example.gallery.MainActivity11"
+            android:name="com.net.kenevans.android.duplicateimagehandler.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

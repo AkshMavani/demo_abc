@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.kenevans.android.duplicateimagehandler.MainActivity">
+    <item
+        android:id="@+id/info"
+        android:orderInCategory="1"
+        android:title="@string/info_item"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/help"
+        android:orderInCategory="2"
+        android:title="@string/help_item" />
+    <item
+        android:id="@+id/choose_data_directory"
+        android:orderInCategory="10"
+        android:title="@string/choose_data_directory_item"
+        app:showAsAction="never"
+        />
+</menu>
