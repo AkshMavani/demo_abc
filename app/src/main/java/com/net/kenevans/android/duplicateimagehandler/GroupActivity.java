@@ -39,11 +39,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class GroupActivity extends AppCompatActivity implements IConstants {
     private Handler mHandler;
-    private ListView mListView;
+    private RecyclerView mListView;
     private ProgressBar mProgressBar;
     private List<Image> mImages;
     private List<Image> mInvalidImages;
@@ -79,6 +81,7 @@ public class GroupActivity extends AppCompatActivity implements IConstants {
         setContentView(R.layout.activity_group);
 
         mListView = findViewById(R.id.list);
+        mListView.setLayoutManager(new GridLayoutManager(GroupActivity.this,3));
         mDirectory = null;
         mUseSubdirectories = true;
         Bundle extras = getIntent().getExtras();
@@ -145,7 +148,7 @@ public class GroupActivity extends AppCompatActivity implements IConstants {
             Log.d(TAG, "GroupActivity: run: images=" + mImages.size());
             mGroups = new ArrayList<>();
             runOnUiThread(() ->
-                    mListView.setAdapter(new GroupAdapter(GroupActivity.this)
+                    mListView.setAdapter(new GroupAdapter(GroupActivity.this,mGroups)
                     ));
             final List<Group> groups =
                     SimilarImage.find(GroupActivity.this, mImages,
@@ -190,7 +193,7 @@ public class GroupActivity extends AppCompatActivity implements IConstants {
                 Log.d(TAG, "Final: images=" + mImages.size() + " groups="
                         + mGroups.size() + " with " + nGroupImages
                         + " group images");
-                mListView.setAdapter(new GroupAdapter(GroupActivity.this));
+                mListView.setAdapter(new GroupAdapter(GroupActivity.this,mGroups));
             });
         }).start();
     }
@@ -308,120 +311,114 @@ public class GroupActivity extends AppCompatActivity implements IConstants {
         builder.show();
     }
 
-    private class GroupAdapter extends ArrayAdapter<Group> {
+    public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
-        public GroupAdapter(@NonNull Context context) {
-            super(context, 0, mGroups);
+        private final Context context;
+        private final List<Group> mGroups;
+
+        public GroupAdapter(Context context, List<Group> groups) {
+            this.context = context;
+            this.mGroups = groups;
+        }
+
+        @NonNull
+        @Override
+        public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_list_group, parent, false);
+            return new GroupViewHolder(view);
         }
 
         @Override
-        public int getCount() {
+        public void onBindViewHolder(@NonNull GroupViewHolder holder, int position) {
+            Group group = mGroups.get(position);
+
+            // Set group name
+            holder.groupName.setText(context.getString(R.string.group_title, position));
+
+            // Set images in nested RecyclerView
+            List<Image> images = group.getImages();
+            ImageAdapter imageAdapter = new ImageAdapter(context, images);
+            holder.imagesRecyclerView.setAdapter(imageAdapter);
+        }
+
+        @Override
+        public int getItemCount() {
             return mGroups == null ? 0 : mGroups.size();
         }
 
-        @Override
-        public Group getItem(int position) {
-            return null;
-        }
+         class GroupViewHolder extends RecyclerView.ViewHolder {
+            TextView groupName;
+            RecyclerView imagesRecyclerView;
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
+            public GroupViewHolder(@NonNull View itemView) {
+                super(itemView);
+                groupName = itemView.findViewById(R.id.group_name);
+                imagesRecyclerView = itemView.findViewById(R.id.imagesRecyclerView);
 
-        /**
-         * Resets the contents of the View.
-         *
-         * @param position The position.
-         * @param holder   The ViewHolder.
-         * @param parent   The parent.
-         */
-        public void resetConvertView(int position, ViewHolder holder,
-                                     ViewGroup parent) {
-            holder.name.setText(GroupActivity.this.getString(
-                    R.string.group_title, position));
-            holder.linearLayout.removeAllViews();
-            // Get the images for this group
-            List<Image> groupImages = mGroups.get(position).getImages();
-//            Log.d(TAG, "    resetConvertView: position=" + position);
-            for (Image image : groupImages) {
-                ConstraintLayout constraintLayout =
-                        (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.image_info_item, parent
-                                        , false);
-                LinearLayout.LayoutParams param =
-                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                holder.linearLayout.addView(constraintLayout, param);
-
-                ImageView imageView =
-                        (ImageView) constraintLayout.getViewById(R.id.image);
-                Glide.with(GroupActivity.this)
-                        .load(image.getPath())
-                        .error(R.drawable.ic_album)
-                        .centerCrop()
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .into(imageView);
-                imageView.setOnClickListener(v ->
-//                        Utils.infoMsg(GroupActivity.this,
-//                                image.toString()));
-                        showViewerForImage(image));
-
-                TextView imageName =
-                        (TextView) constraintLayout.getViewById(R.id.image_name);
-                imageName.setText(image.getName());
-                imageName.setOnClickListener(v ->
-                        Utils.infoMsg(GroupActivity.this,
-                                image.toString()));
-
-                TextView imageSize =
-                        (TextView) constraintLayout.getViewById(R.id.image_size);
-                String readableSize =
-                        Utils.humanReadableByteCountBin(image.getSize());
-                imageSize.setText(readableSize);
-                imageSize.setOnClickListener(v ->
-                        Utils.infoMsg(GroupActivity.this,
-                                image.toString()));
-
-                TextView imagePath =
-                        (TextView) constraintLayout.getViewById(R.id.image_path);
-                imagePath.setText(image.getPath());
-                imagePath.setOnClickListener(v ->
-                        Utils.infoMsg(GroupActivity.this,
-                                image.toString()));
-
-                CheckBox checkBox =
-                        (CheckBox) constraintLayout.getViewById(R.id.checkBox);
-                checkBox.setChecked(image.isChecked());
-                checkBox.setOnCheckedChangeListener((buttonView,
-                                                     isChecked) ->
-                        image.setChecked(isChecked));
+                // Set GridLayoutManager for nested RecyclerView
+                imagesRecyclerView.setLayoutManager(new GridLayoutManager(itemView.getContext(), 3));
             }
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-//            Log.d(TAG, "getView: position=" + position + " convertView=null: "
-//                    + (convertView == null));
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_list_group, parent, false);
-                holder = new ViewHolder();
-                holder.name = convertView.findViewById(R.id.group_name);
-                holder.linearLayout = convertView.findViewById(R.id.images);
-                resetConvertView(position, holder, parent);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-                resetConvertView(position, holder, parent);
-            }
-            return convertView;
-        }
-
-        private class ViewHolder {
-            TextView name;
-            LinearLayout linearLayout;
         }
     }
+    public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
+
+        private final Context context;
+        private final List<Image> images;
+
+        public ImageAdapter(Context context, List<Image> images) {
+            this.context = context;
+            this.images = images;
+        }
+
+        @NonNull
+        @Override
+        public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.image_info_item, parent, false);
+            return new ImageViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+            Image image = images.get(position);
+
+            // Load image using Glide
+            Glide.with(context)
+                    .load(image.getPath())
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_album)
+                    .into(holder.image);
+
+            // Set text and listeners
+            holder.imageName.setText(image.getName());
+            holder.checkBox.setChecked(image.isChecked());
+
+            holder.image.setOnClickListener(v -> {
+                // Handle image click
+                Utils.infoMsg(context, image.toString());
+            });
+
+            holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                image.setChecked(isChecked);
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return images == null ? 0 : images.size();
+        }
+
+         class ImageViewHolder extends RecyclerView.ViewHolder {
+            ImageView image;
+            TextView imageName;
+            CheckBox checkBox;
+
+            public ImageViewHolder(@NonNull View itemView) {
+                super(itemView);
+                image = itemView.findViewById(R.id.image);
+                imageName = itemView.findViewById(R.id.image_name);
+                checkBox = itemView.findViewById(R.id.checkBox);
+            }
+        }
+    }
+
 }

@@ -120,7 +120,7 @@ class Window(
     fun close() {
         try {
             // Notify service that the window is closed
-            val intent = Intent(context, MyForegroundService::class.java).apply {
+            val intent = Intent(context, MyService::class.java).apply {
                 putExtra("window_closed", true)
             }
             context.startService(intent)

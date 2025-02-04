@@ -13,7 +13,7 @@ class ScreenReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_SCREEN_ON) {
             Log.e("ScreenReceiver", "Screen ON detected")
-            val serviceIntent = Intent(context, MyForegroundService::class.java)
+            val serviceIntent = Intent(context, MyService::class.java)
             serviceIntent.putExtra("a", true)
             context.startService(serviceIntent)
         } else if (intent.action == Intent.ACTION_SCREEN_OFF) {
